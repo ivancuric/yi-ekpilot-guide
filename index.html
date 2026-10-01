@@ -39,6 +39,15 @@ h1{font-size:clamp(1.7rem,4vw,2.4rem);font-weight:700;letter-spacing:.01em}
 h2{font-size:1.5rem;font-weight:700;margin-bottom:12px}
 h3{font-size:1.1rem;font-weight:600}
 .lede{color:var(--muted);max-width:68ch;margin:8px 0 0}
+/* collapsible section: the heading is the toggle, a chevron shows the state */
+.fold>summary{display:flex;align-items:center;gap:10px;cursor:pointer;list-style:none;margin-bottom:12px;width:fit-content}
+.fold>summary::-webkit-details-marker{display:none}
+.fold>summary h2{margin:0}
+.fold>summary::before{content:"";flex:none;width:.5em;height:.5em;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);rotate:-45deg;margin-right:2px}
+.fold[open]>summary::before{rotate:45deg}
+.fold>summary:hover::before{border-color:var(--calm)}
+.fold>summary:focus-visible{outline:2px solid var(--calm);outline-offset:4px;border-radius:4px}
+@media (prefers-reduced-motion:no-preference){.fold>summary::before{transition:rotate .15s}}
 .meta{display:flex;flex-wrap:wrap;gap:8px 32px;margin:16px 0 0}
 .meta dt{font-size:.82rem;color:var(--muted)}
 .meta dd{margin:0;font:600 1rem var(--display)}
@@ -530,7 +539,8 @@ footer{margin-top:44px;color:var(--muted);font-size:.85rem;border-top:1px solid 
 </section>
 
 <section id="general">
-  <h2>Singapore run <a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=6060s">1:41:00</a></h2>
+  <details class="fold">
+  <summary><h2>Singapore run <a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=6060s">1:41:00</a></h2></summary>
   <div class="grid3">
     <div class="panel"><h3>Day 1</h3><ul>
       <li>Diana: close, won with Ruin Runner at the end. Play around Moonfall.</li>
@@ -551,6 +561,7 @@ footer{margin-top:44px;color:var(--muted);font-size:.85rem;border-top:1px solid 
       <li>He thinks Yi is no longer the strongest deck (Jayce is) but can still top 64.</li>
     </ul></div>
   </div>
+  </details>
 </section>
 
 <section id="lists">
@@ -714,6 +725,7 @@ function syncNav(){
   if(nav.scrollWidth>nav.clientWidth)a.scrollIntoView({block:'nearest',inline:'nearest',container:'nearest',
     behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'instant':'smooth'});
 }
+nav.addEventListener('click',e=>{const d=document.querySelector(e.target.closest('a')?.hash||null)?.querySelector('details.fold');if(d)d.open=true;});
 addEventListener('scrollend',syncNav);
 requestAnimationFrame(()=>requestAnimationFrame(syncNav)); // deep links / restored scroll fire no scrollend
 })();
