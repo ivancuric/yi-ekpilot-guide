@@ -85,6 +85,7 @@ li::marker{color:var(--muted)}
 }
 .tier{font:600 .82rem var(--display);padding:1px 8px;border-radius:3px;background:var(--sunk);color:var(--muted)}
 .tier.hard{background:var(--body-bg);color:var(--body)}
+.tier.vhard{background:var(--body);color:var(--surface)}
 .tier.even{background:var(--warn-bg);color:var(--warn)}
 .swap{display:grid;grid-template-columns:auto 1fr;gap:6px 10px;align-items:start;margin:8px 0 4px}
 .swap .lbl{font:700 .82rem var(--display);letter-spacing:.02em;padding:3px 7px;border-radius:3px;text-align:center}
@@ -96,6 +97,18 @@ li::marker{color:var(--muted)}
 .chips.in .chip{background:var(--calm-bg);color:var(--calm)}
 .chips.mull .chip{background:var(--sunk);color:var(--fg)}
 .alts{font-size:.88rem;color:var(--muted);margin-top:6px}
+.note{font-size:.85rem;color:var(--muted);margin:8px 0 0;line-height:1.45}
+.note strong{color:var(--fg);font-weight:600}
+.chip a{color:inherit;text-underline-offset:3px}
+/* matchup index: one tap from the top of the page to any plan */
+.find{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,10.5rem),1fr));gap:6px}
+.find a{display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-height:44px;padding:8px 10px;border-radius:6px;background:var(--surface);border:1px solid var(--line);color:var(--fg);text-decoration:none}
+.find a:hover{border-color:var(--calm)}
+.find a:focus-visible{outline:2px solid var(--calm);outline-offset:2px}
+.find .nm{font:600 1rem var(--display)}
+.find .tier{font-size:.75rem}
+#rapid td:first-child .tier{display:inline-block;margin-top:4px}
+#rapid .chips{margin:0}
 .alts strong{color:var(--fg);font-weight:600}
 
 /* rapid fire table */
@@ -194,16 +207,38 @@ footer{margin-top:44px;color:var(--muted);font-size:.85rem;border-top:1px solid 
 <div class="wrap">
 <header>
   <h1>Master Yi: Ekpilot's <span class="nw">Top-4</span> Guide, Condensed</h1>
-  <p class="lede">Ekpilot's <a href="https://www.youtube.com/watch?v=JtfcgYfdU4c">Singapore RQ top-4 Master Yi guide</a> on one page. Matchup sideboard plans assume the Singapore list.</p>
+  <p class="lede">Ekpilot's <a href="https://www.youtube.com/watch?v=JtfcgYfdU4c">Singapore RQ top-4 Master Yi guide</a> on one page. Matchup sideboard plans use the Singapore list; the <strong>Post-ban list</strong> notes under each plan adjust them for the post-ban deck and the skirmish 10.</p>
   <dl class="meta"><div><dt>Legend</dt><dd>Master Yi, Wuju Bladesman</dd></div><div><dt>Chosen champion</dt><dd>Master Yi, Tempered</dd></div><div><dt>Runes</dt><dd>7 Body, 5 Calm</dd></div></dl>
 </header>
 
 <nav class="jump" aria-label="Sections">
-  <a href="#deck">Deck</a><a href="#bf">Battlefields</a><a href="#cards">Card notes</a><a href="#tricks">Tricks</a><a href="#side">Sideboard rules</a><a href="#skirmish">Skirmish 10</a>
-  <a href="#yi">Yi</a><a href="#kennen">Kennen</a><a href="#jayce">Jayce</a><a href="#leblanc">LeBlanc</a><a href="#irelia">Irelia</a><a href="#rengar">Rengar</a><a href="#azir">Azir</a><a href="#rapid">Others</a><a href="#general">General</a><a href="#lists">LA top 8</a>
+  <a href="#find">Matchups</a><a href="#deck">Deck</a><a href="#side">Sideboard rules</a><a href="#skirmish">Skirmish 10</a>
+  <a href="#yi">Yi</a><a href="#kennen">Kennen</a><a href="#jayce">Jayce</a><a href="#leblanc">LeBlanc</a><a href="#irelia">Irelia</a><a href="#rengar">Rengar</a><a href="#azir">Azir</a><a href="#rapid">Others</a>
+  <a href="#bf">Battlefields</a><a href="#cards">Card notes</a><a href="#tricks">Tricks</a><a href="#general">Singapore run</a><a href="#lists">LA top 8</a>
 </nav>
 
 <main>
+<section id="find">
+  <h2>Find your matchup</h2>
+  <nav class="find" aria-label="Matchups">
+    <a href="#yi"><span class="nm">Master Yi mirror</span><span class="tier even">Even</span></a>
+    <a href="#kennen"><span class="nm">Kennen</span><span class="tier">Not rated</span></a>
+    <a href="#jayce"><span class="nm">Jayce</span><span class="tier vhard">Very hard</span></a>
+    <a href="#leblanc"><span class="nm">LeBlanc</span><span class="tier vhard">Very hard</span></a>
+    <a href="#irelia"><span class="nm">Irelia</span><span class="tier hard">Hard</span></a>
+    <a href="#rengar"><span class="nm">Rengar</span><span class="tier even">Even</span></a>
+    <a href="#azir"><span class="nm">Azir</span><span class="tier hard">Hard</span></a>
+    <a href="#akali"><span class="nm">Akali</span><span class="tier">Not rated</span></a>
+    <a href="#diana"><span class="nm">Diana</span><span class="tier hard">Hard</span></a>
+    <a href="#draven"><span class="nm">Draven</span><span class="tier">Not rated</span></a>
+    <a href="#ezreal"><span class="nm">Ezreal</span><span class="tier">Not rated</span></a>
+    <a href="#khazix"><span class="nm">Kha'Zix</span><span class="tier vhard">Very hard</span></a>
+    <a href="#reksai"><span class="nm">Rek'Sai</span><span class="tier">Not rated</span></a>
+    <a href="#ornn"><span class="nm">Ornn</span><span class="tier">Not rated</span></a>
+    <a href="#fiora"><span class="nm">Fiora hybrid</span><span class="tier vhard">Very hard</span></a>
+  </nav>
+</section>
+
 <section id="deck">
   <h2>Deck <a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=73s">1:13</a> <a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=205s">3:25</a></h2>
   <div class="grid2">
@@ -236,6 +271,211 @@ footer{margin-top:44px;color:var(--muted);font-size:.85rem;border-top:1px solid 
       </ul>
     </div>
   </div>
+</section>
+
+<section id="side">
+  <h2>Sideboard rules <a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=1821s">30:21</a></h2>
+  <div class="grid2">
+    <div class="panel"><dl class="rule">
+      <dt>Mindset</dt><dd>Start with the cards that feel bad in the matchup, take those out, then fill from the side. The deck is 40 good cards, so starting from what to bring in goes nowhere. After game 1, read their build (equipment or not, etc.) and adjust.</dd>
+      <dt id="flex">Flex, going first</dt><dd>Cut <strong>1 First Mate</strong> (you're on 2/4/6 runes and it collides with Yi and Rengar) and <strong>1 En Garde</strong> (dead on turns 1–2 at even rune counts).</dd>
+      <dt>Flex, going second</dt><dd>Cut <strong>two 2-drops</strong>: First Mate becomes a turn-1 play, so 12 turn-1 plays is overkill. Default: <strong>2 Lonely Poro</strong>.</dd>
+      <dt>Poro vs Scuttle</dt><dd>Against heavy removal, keep Scuttle: it dies anyway and gives hand info. When the matchup needs early might, keep Poro. Against Kennen, his turn-1 units with his legend's +2 kill Scuttle for free.</dd>
+    </dl></div>
+    <div class="panel"><h3>Mulligan &amp; tempo rules <a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=5181s">1:26:21</a></h3><ul>
+      <li>Keep a turn-1 play, a turn-2 Yi and a turn-3 play. Don't keep turn-10 cards: unlike Kennen, Yi can't filter them away.</li>
+      <li>Develop every turn. Avoid two units on board with an empty base.</li>
+      <li>Losing units for free is the main way Yi loses. Don't push a turn-1 2-drop into a board that hits 4+ might on conquer (Rengar, Diana).</li>
+      <li>Play around known removal: Moonfall, Cull, Thousand-Tailed Watcher, Bellows Breath, Falling Star.</li>
+      <li>Mulligan for Not So Fast and Defy against purple, Rengar against fair might decks, and Onslaught and Alpha Strike against hold decks (LeBlanc, Vex, Master Yi, Wuju Master).</li>
+      <li>Keep Zhonya's against heavy-removal decks (Kai'Sa, Jinx, Ezreal). Against Diana it's a blowout risk if they run Acceptable Losses.</li>
+    </ul></div>
+  </div>
+</section>
+
+<section id="skirmish">
+  <h2>Skirmish sideboard</h2>
+  <p class="lede" style="margin:0 0 14px">Ten slots for a local event. It's Ekpilot's post-ban sideboard: every card but one does its job without a read on the opponent. Assumes the post-ban main deck (2 Sabotage, 1 Zhonya's). The most you ever bring in is 6, against Jayce.</p>
+  <div class="grid2">
+    <div class="tbl"><table class="stack sk">
+      <thead><tr><th>Card</th><th>Bring in against</th></tr></thead>
+      <tbody>
+        <tr><td>3 Disarming Rake</td><td data-label="Bring in against">3 vs Jayce, Azir, Ornn. 2 vs Kennen, <span data-card="Irelia - Blade Dancer">Irelia</span>, Ezreal. 1 vs LeBlanc.</td></tr>
+        <tr><td>2 Decree of Focus</td><td data-label="Bring in against">2 vs <span data-card="Rengar - Pridestalker">Rengar</span>, Draven, <span data-card="Rek'sai - Void Burrower">Rek'Sai</span>. 1 vs <span data-card="Akali - Rogue Assassin">Akali</span>.</td></tr>
+        <tr><td>1 Ruin Runner</td><td data-label="Bring in against">Kennen, Jayce, LeBlanc, <span data-card="Irelia - Blade Dancer">Irelia</span>, Azir, Diana, Ezreal, Kha'Zix.</td></tr>
+        <tr><td>1 Sabotage</td><td data-label="Bring in against">Almost every matchup.</td></tr>
+        <tr><td>1 Alpha Strike</td><td data-label="Bring in against">LeBlanc (the second copy is a must-have there) and the Yi mirror.</td></tr>
+        <tr><td>1 Decree of Strength</td><td data-label="Bring in against">LeBlanc: takes a Ruined Rex from their hand.</td></tr>
+        <tr><td>1 Not So Fast</td><td data-label="Bring in against">Kennen, Jayce, LeBlanc, <span data-card="Irelia - Blade Dancer">Irelia</span>, Diana, Ezreal, Kha'Zix, <span data-card="Akali - Rogue Assassin">Akali</span>. Only for the targets listed here.</td></tr>
+      </tbody>
+    </table></div>
+    <div class="panel"><h3><span>Not So Fast: counter only these</span></h3>
+      <dl class="rule">
+        <dt>Kennen</dt><dd>Switcheroo, after they've used their legend.</dd>
+        <dt>Jayce</dt><dd>Elder Dragon, especially at 6 points.</dd>
+        <dt><span data-card="Irelia - Blade Dancer">Irelia</span></dt><dd>Rebuke, in the Astral Heron fight.</dd>
+        <dt><span data-card="Akali - Rogue Assassin">Akali</span></dt><dd>Falling Star or Blitzcrank.</dd>
+        <dt>Diana</dt><dd>A Moonfall that pulls a unit. Not one that only targets the battlefield.</dd>
+      </dl>
+      <p class="alts">Let everything else resolve. Without a target it's a dead card, so don't fire it at the first spell you see.</p>
+      <p class="alts"><strong>Lots of Yi players at your store?</strong> Run 1 Fiora, Peerless instead. She's a plain unit, and he brings in 2 for the mirror.</p>
+      <p class="alts"><strong>Left out:</strong> Back Off, Unyielding Spirit, Repulse. They're reactive tricks with timing windows, the same problem as Not So Fast with less upside. Ruin Runner and Sabotage can't go higher: the main deck already has 2 of each, so 3 is the cap.</p>
+    </div>
+  </div>
+</section>
+
+<section id="matchups">
+  <h2>Main matchups</h2>
+  <div class="mus">
+
+  <article class="mu" id="yi">
+    <header><h3>Master Yi mirror</h3><span class="tier even">Even</span><a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=2138s">35:38</a></header>
+    <div class="pick"><div class="swap">
+      <span class="lbl out">Out</span><div class="chips out"><span class="chip">2 Ruin Runner</span><span class="chip">1 Not So Fast</span></div>
+      <span class="lbl in">In</span><div class="chips in"><span class="chip">2 Fiora, Peerless</span><span class="chip">1 Sabotage</span></div>
+    </div>
+      <p class="note"><strong>Post-ban list:</strong> out 2 Ruin Runner, in 1 Sabotage + 1 Alpha Strike (no Fiora). Not So Fast stays in.</p>
+    <span class="k">Mulligan</span><div class="chips mull"><span class="chip">Rengar</span><span class="chip">Punch First</span><span class="chip">Removal (Charm, Rampage)</span></div></div>
+    <div class="plan"><span class="k">Plan</span><ul>
+      <li><strong>Going first is favored.</strong></li>
+      <li>Remove every unit so their legend never triggers and they're playing a vanilla legend.</li>
+      <li><strong>Don't push early onto Grove.</strong> It hands them a free 8-might Rengar ambush. Develop the 2-drop and Yi, let them commit, then attack.</li>
+      <li>Charm + Rengar won his top-8 game going second.</li>
+    </ul>
+    <p class="alts"><strong>Local tech:</strong> Fiora, 2nd Alpha Strike, 3rd Sabotage, Vilemaw, Grim Resolve, Sterak's Gage (reusable +3, costs runes), Back Off (they'll read it as Zhonya's), Irelia.</p></div>
+  </article>
+
+  <article class="mu" id="kennen">
+    <header><h3>Kennen</h3><span class="tier">Not rated</span><a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=2529s">42:09</a></header>
+    <div class="pick"><div class="swap">
+      <span class="lbl out">Out</span><div class="chips out"><span class="chip">1 Charm</span><span class="chip">1 En Garde</span><span class="chip">2 Zhonya's</span><span class="chip">1 <a href="#flex">flex</a></span></div>
+      <span class="lbl in">In</span><div class="chips in"><span class="chip">1 Ruin Runner</span><span class="chip">1 Not So Fast</span><span class="chip">1 Sabotage</span><span class="chip">2 Disarming Rake</span></div>
+    </div>
+      <p class="note"><strong>Post-ban list:</strong> only 1 Zhonya's, so cut it and 2 flex.</p>
+    <span class="k">Mulligan</span><div class="chips mull"><span class="chip">Rampage</span><span class="chip">Not So Fast</span></div></div>
+    <div class="plan"><span class="k">Plan</span><ul>
+      <li><strong>Be the aggressor</strong> and take the trades: Kennen wins the late game with Last Rites, Rebukes and card draw.</li>
+      <li><strong>Kill the rat</strong> (their chosen champion). Use Rampage, not Charm: their legend's +2 can turn a Charm against you.</li>
+      <li>Not So Fast their Switcheroo after they spend the legend: you win a 6-vs-4 fight with one card.</li>
+      <li>Rakes kill Last Rites and the Seal: 2 Rakes, 3 if they run Edge of Night.</li>
+      <li>Zhonya's is weak: they flip it, then Rebuke.</li>
+    </ul>
+    <p class="alts"><strong>Alternatives:</strong> Alpha Strike, Twilight Shroud (blanks Switcheroo), Adaptatron (kills gear like the Seal on conquer), Disposal Order (graveyard hate, answers Fizz), Repulse, 2nd Onslaught.</p></div>
+  </article>
+
+  <article class="mu" id="jayce">
+    <header><h3>Jayce (Aurora)</h3><span class="tier vhard">Very hard</span><a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=2816s">46:56</a></header>
+    <div class="pick"><div class="swap">
+      <span class="lbl out">Out</span><div class="chips out"><span class="chip">2 En Garde</span><span class="chip">2 Rampage</span><span class="chip">2 Punch First</span></div>
+      <span class="lbl in">In</span><div class="chips in"><span class="chip">1 Ruin Runner</span><span class="chip">1 Not So Fast</span><span class="chip">1 Sabotage</span><span class="chip">3 Disarming Rake</span></div>
+    </div>
+    <span class="k">Mulligan</span><div class="chips mull"><span class="chip">Charm</span><span class="chip">Not So Fast</span><span class="chip">Sabotage</span><span class="chip">Defy</span></div></div>
+    <div class="plan"><span class="k">Plan</span><ul>
+      <li><strong>Now the best deck in the format.</strong> You need utility, not might: cut might and removal, bring in answers.</li>
+      <li>Two Aurora triggers end the game. Sabotage it from hand, Rake it on arrival, and Rake the Platewyrm Egg that powers out an early Aurora.</li>
+      <li><strong>On your Emperor's Dais game</strong> (going second), conquer with a Rake and use the Dais trigger to return it to hand, ready to kill the Aurora when it lands.</li>
+      <li>Before their 9-rune turn, <strong>group your units</strong> so one Elder Dragon can't clear the board.</li>
+      <li>Keep a Charm to send Elder back to base, then play Rengar for a quick conquer and a double conquer.</li>
+      <li>Once the Elder trigger's targets are locked, respond by playing Rengar onto that battlefield.</li>
+      <li>At 6 points, Not So Fast the Elder to win.</li>
+    </ul>
+    <p class="alts"><strong>Alternatives:</strong> 3rd Sabotage, Unyielding Spirit (no spell/ability damage this turn), Ambessa / Akali (dodge Elder), Steel Paws, Trinity Force (untested), Tomb-Raider Barbara (worse than Rake: can't kill a turn-2 Aurora), Esteemed Hierophant (niche).</p></div>
+  </article>
+
+  <article class="mu" id="leblanc">
+    <header><h3>LeBlanc</h3><span class="tier vhard">Very hard</span><a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=3194s">53:14</a></header>
+    <div class="pick"><div class="swap">
+      <span class="lbl out">Out</span><div class="chips out"><span class="chip">2 Defy</span><span class="chip">1 <a href="#flex">flex</a></span></div>
+      <span class="lbl in">In</span><div class="chips in"><span class="chip">1 Ruin Runner</span><span class="chip">1 Not So Fast</span><span class="chip">1 Disarming Rake</span></div>
+    </div>
+      <p class="note"><strong>Going second:</strong> cut 1 Defy + 1 Scuttle Crab instead.<br><strong>Against B.F. Sword:</strong> a 2nd Disarming Rake.<br><strong>Post-ban list:</strong> Ekpilot adds the 2nd Alpha Strike and Decree of Strength here. Cut the 3rd Defy and a 2nd flex for them.</p>
+    <span class="k">Mulligan</span><div class="chips mull"><span class="chip">Alpha Strike</span><span class="chip">Onslaught</span><span class="chip">Rampage</span></div></div>
+    <div class="plan"><span class="k">Plan</span><ul>
+      <li>Fight for both battlefields early (First Mate double conquer, hold the Grove). If LeBlanc can't conquer, her legend, Glasc Mixologist and Ruined Rex value all stall.</li>
+      <li><strong>Karthus must die.</strong> Expect it back via Mixologist.</li>
+      <li>Kill everything, including the birds whose deathknell gives them runes. They'll get that value eventually anyway.</li>
+      <li>Watcher → Punch First. Vi → Alpha Strike.</li>
+      <li>Win state: both at 6, and you have one big turn with Alpha Strike + Onslaught.</li>
+      <li>Defy only hits Hidden Blade and Deathgrip. Keep it if they run Smoke and Mirrors or Cull the Weak.</li>
+    </ul>
+    <p class="alts"><strong>Alternatives:</strong> 2nd Alpha Strike (<strong>must-have</strong>), Back Off (stuns Vi or the Watcher), 2nd Onslaught, Ambessa (attacks for 7, then defends for 9), Akali, Irelia, Vilemaw, Trinity Force.</p></div>
+  </article>
+
+  <article class="mu" id="irelia">
+    <header><h3>Irelia</h3><span class="tier hard">Hard</span><a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=3751s">1:02:31</a></header>
+    <div class="pick"><div class="swap">
+      <span class="lbl out">Out</span><div class="chips out"><span class="chip">2 Charm</span><span class="chip">2 Zhonya's</span><span class="chip">1 <a href="#flex">flex</a></span></div>
+      <span class="lbl in">In</span><div class="chips in"><span class="chip">1 Ruin Runner</span><span class="chip">1 Not So Fast</span><span class="chip">1 Sabotage</span><span class="chip">2 Disarming Rake</span></div>
+    </div>
+      <p class="note"><strong>Protect-the-queen build:</strong> 2 Fiora, Peerless instead of Ruin Runner + Not So Fast.<br><strong>Post-ban list:</strong> only 1 Zhonya's, so cut it and 2 flex. No Fiora in the skirmish 10.</p>
+    <span class="k">Mulligan</span><div class="chips mull"><span class="chip">Punch First</span><span class="chip">Rengar</span><span class="chip">Rampage (for Stellacorn Herder)</span><span class="chip">Defy</span></div></div>
+    <div class="plan"><span class="k">Plan</span><ul>
+      <li>Your legend is a free En Garde every turn. Make them spend one more card than you in every fight and you outgrind them.</li>
+      <li>Count their accelerated might before pushing: Irelia accelerated with Guardian Angel hits 7, with Boots of Swiftness 8.</li>
+      <li>Before you Defy, <strong>ask whether they're using the Irelia legend</strong>, and let them finish their reactions first.</li>
+      <li>Charm is bad: it gives them a combat they can win with Rebuke or buffs. Zhonya's is fine vs midrange builds, bad vs Astral Heron.</li>
+      <li>Heron build: you'll have to fight the Heron eventually. Not So Fast their Rebuke, then Ruin Runner + Punch First, or Ruin Runner + Onslaught + Alpha Strike.</li>
+      <li>Protect-the-queen build: bring <strong>Fiora, Peerless</strong> instead of Ruin Runner and Not So Fast. This won his round 11.</li>
+    </ul>
+    <p class="alts"><strong>Alternatives:</strong> Back Off (catches them mid-buff war), Twilight Shroud, Tomb-Raider Barbara and Akshan (gear removal; Akshan steals the gear), Grim Resolve, Irelia, Crumbling Sands, Sterak's Gage.</p></div>
+  </article>
+
+  <article class="mu" id="rengar">
+    <header><h3>Rengar</h3><span class="tier even">Even</span><a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=4302s">1:11:42</a></header>
+    <div class="pick"><div class="swap">
+      <span class="lbl out">Out</span><div class="chips out"><span class="chip">2 Ruin Runner</span><span class="chip">1 Not So Fast</span></div>
+      <span class="lbl in">In</span><div class="chips in"><span class="chip">2 Decree of Focus</span><span class="chip">1 Sabotage</span></div>
+    </div>
+    <span class="k">Mulligan</span><div class="chips mull"><span class="chip">Punch First</span><span class="chip">Rengar</span><span class="chip">Charm</span><span class="chip">Alpha Strike</span></div></div>
+    <div class="plan"><span class="k">Plan</span><ul>
+      <li>Track their might from open runes: 2 = Inferna (+4), 3 = Punch First, 4 = accelerated 5-might, 5 = Rengar.</li>
+      <li>Cutting 1–2 Defy is still an option but less appealing now: they run 3 Rampage + 3 Thrill of the Hunt worth countering.</li>
+      <li><strong>Slight edge to Yi.</strong> You have more card draw, so play for the late game. Rengar is much stronger attacking; keep units home when they hold a lot of might.</li>
+      <li>Don't tap out into an early Rampage. Losing units for free is how this matchup is lost.</li>
+      <li>Kill the Fae Porter: it brings a unit along for a 7-might Rengar slam, especially on Star Spring.</li>
+      <li>Watch for Thrill of the Hunt: units jumping battlefields, or a point stolen on your turn.</li>
+      <li><strong>Decree ruling:</strong> if they Thrill the Fury unit out after you cast Decree, the Decree fizzles. Defy the Thrill.</li>
+    </ul>
+    <p class="alts"><strong>Alternatives:</strong> Back Off, Alpha Strike, Irelia, Grim Resolve (better with Irelia), Vilemaw, Sterak's Gage (meh), Elder Dragon (meme).</p></div>
+  </article>
+
+  <article class="mu" id="azir">
+    <header><h3>Azir</h3><span class="tier hard">Hard</span><a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=4795s">1:19:55</a></header>
+    <div class="pick"><div class="swap">
+      <span class="lbl out">Out</span><div class="chips out"><span class="chip">1 Not So Fast</span><span class="chip">1 En Garde</span><span class="chip">2 Zhonya's</span><span class="chip">1 <a href="#flex">flex</a></span></div>
+      <span class="lbl in">In</span><div class="chips in"><span class="chip">3 Disarming Rake</span><span class="chip">1 Ruin Runner</span><span class="chip">1 Sabotage</span></div>
+    </div>
+      <p class="note"><strong>Post-ban list:</strong> only 1 Zhonya's, so cut it and 2 flex.</p>
+    <span class="k">Mulligan</span><div class="chips mull"><span class="chip">Defy</span><span class="chip">Sabotage</span><span class="chip">Rampage / Charm</span><span class="chip">Rengar</span></div></div>
+    <div class="plan"><span class="k">Plan</span><ul>
+      <li>Aggro deck on a 4-6-8 curve. Beat it with one strong hold turn, then run them out of units.</li>
+      <li>Rengar's 6 attack / 8 defense is awkward for them. They need Sand Soldier + 2 B.F. Swords or Brutalizers to beat it.</li>
+      <li>Game 1 is hard with no equipment hate. Rakes plus the Dais loop take their +3s away.</li>
+      <li>Defy their hidden hold cards: Back Off, Hidden Blade, Guards! (+5).</li>
+      <li>Rampage, not Charm, on Azir's chosen champion: Charm him in and he brings all his units.</li>
+      <li>Watch for Vi: a 3-might attacker + Vi is 8 and kills Rengar for free.</li>
+    </ul>
+    <p class="alts"><strong>Alternatives:</strong> Akshan (steal a B.F. Sword, then defend for 9), Adaptatron, Tomb-Raider Barbara, Irelia, Back Off, Alpha Strike, Grim Resolve, Wind Wall vs Arise! (meme).</p></div>
+  </article>
+
+  </div>
+</section>
+
+<section id="rapid">
+  <h2>Rapid-fire matchups <a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=5410s">1:30:10</a></h2>
+  <div class="tbl"><table class="stack">
+    <thead><tr><th>Deck</th><th>Out</th><th>In</th><th>Key notes</th></tr></thead>
+    <tbody>
+      <tr id="akali"><td>Akali <a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=5410s">1:30:10</a><br><span class="tier">Not rated</span></td><td data-label="Out"><div class="chips out"><span class="chip">1 Zhonya's</span><span class="chip">2 <a href="#flex">flex</a></span></div></td><td data-label="In"><div class="chips in"><span class="chip">1 Not So Fast</span><span class="chip">1 Decree of Focus</span><span class="chip">1 Sabotage</span></div></td><td data-label="Key notes"><strong>Going first:</strong> make one flex a Charm rather than En Garde. Kill the Stellacorn Herder (draw engine) on sight. Not So Fast stops Falling Star and Blitzcrank. Your legend's +2 doesn't apply when she <em>moves in</em> (Void Gate damage), only when she moves out. Decree of Focus is normally dead against Heron (not a Fury unit), but it becomes live if they flip a Fury unit like Marai into that fight.</td></tr>
+      <tr id="diana"><td>Diana <a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=5555s">1:32:35</a><br><span class="tier hard">Hard</span></td><td data-label="Out"><div class="chips out"><span class="chip">1 Onslaught</span><span class="chip">1 Punch First</span><span class="chip">1 Charm</span></div></td><td data-label="In"><div class="chips in"><span class="chip">1 Ruin Runner</span><span class="chip">1 Not So Fast</span><span class="chip">1 Sabotage</span></div></td><td data-label="Key notes">First 3 turns: develop in base only. Always keep Rampage. Charm is bad because it pulls in their best unit as an 8. Not So Fast can't counter a Moonfall that targets the battlefield, only one that pulls a unit. Watch for Kha'Zix and Switcheroo.</td></tr>
+      <tr id="draven"><td>Draven <a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=5674s">1:34:34</a><br><span class="tier">Not rated</span></td><td data-label="Out"><div class="chips out"><span class="chip">3 Defy</span><span class="chip">1 <a href="#flex">flex</a></span></div></td><td data-label="In"><div class="chips in"><span class="chip">2 Decree of Focus</span><span class="chip">1 Sabotage</span><span class="chip">1 Ruin Runner</span></div></td><td data-label="Key notes"><strong>By build:</strong> cut 1–3 Defy. If they run Star-Crossed or other Defy targets, keep those Defy and cut Zhonya's instead. Decree's +4 wrecks them, especially vs Spinning Axe. Sabotage forces an Axe on your turn, then Charm kills unit and Axe together. Don't give Scuttle away for free. Watch Cleave (+3) and accelerated <span data-card="Kha'Zix - Mutating Horror">Kha'Zix</span>, <span data-card="Darius - Trifarian">Darius</span> and Rek'Sai.</td></tr>
+      <tr id="ezreal"><td>Ezreal <a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=5788s">1:36:28</a><br><span class="tier">Not rated</span></td><td data-label="Out"><div class="chips out"><span class="chip">1 Onslaught</span><span class="chip">1 Rampage</span><span class="chip">1 Charm</span><span class="chip">1 Alpha Strike</span><span class="chip">1 Punch First</span></div></td><td data-label="In"><div class="chips in"><span class="chip">2 Disarming Rake</span><span class="chip">1 Ruin Runner</span><span class="chip">1 Not So Fast</span><span class="chip">1 Sabotage</span></div></td><td data-label="Key notes">They barely hold; <span data-card="Vex - Apathetic">Vex</span> is the most they hold with. Kill the Pack of Wonders gear fast. Prismat ran this same plan.</td></tr>
+      <tr id="khazix"><td>Kha'Zix <a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=5863s">1:37:43</a><br><span class="tier vhard">Very hard</span></td><td data-label="Out"><div class="chips out"><span class="chip">2 Zhonya's</span><span class="chip">1 <a href="#flex">flex</a></span></div></td><td data-label="In"><div class="chips in"><span class="chip">1 Ruin Runner</span><span class="chip">1 Not So Fast</span><span class="chip">1 Sabotage</span></div></td><td data-label="Key notes"><strong>Post-ban list:</strong> only 1 Zhonya's, so cut it and 2 flex. Their purple chosen champion becomes a 7-might defender. Lots of Star-Crossed and Rebuke make Zhonya's bad. Keep Rampage for Kha'Zix and Fae Porter, and watch that combo on Star Spring.</td></tr>
+      <tr id="reksai"><td>Rek'Sai <a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=5914s">1:38:34</a><br><span class="tier">Not rated</span></td><td data-label="Out"><div class="chips out"><span class="chip">2 Ruin Runner</span><span class="chip">1 <a href="#flex">flex</a></span></div></td><td data-label="In"><div class="chips in"><span class="chip">2 Decree of Focus</span><span class="chip">1 Sabotage</span></div></td><td data-label="Key notes">Full red aggro. Sabotage takes Hidden Blade or Falling Star and reveals odd techs like Imperial Decree.</td></tr>
+      <tr id="ornn"><td>Ornn <a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=5940s">1:39:00</a><br><span class="tier">Not rated</span></td><td data-label="Out"><div class="chips out"><span class="chip">2 Ruin Runner</span><span class="chip">1 Charm</span><span class="chip">1 Zhonya's</span></div></td><td data-label="In"><div class="chips in"><span class="chip">3 Disarming Rake</span><span class="chip">1 Sabotage</span></div></td><td data-label="Key notes">Their might comes from gear, so kill every Sterak's and Brutalizer. Their +3s beat your +2. Don't let them get an early hold, and don't attack into Brutalizers. The Ornn player claims he's favored.</td></tr>
+      <tr id="fiora"><td>Fiora (Rengar/Kayle hybrid)<br><span class="tier vhard">Very hard</span></td><td colspan="2" data-label="Out / In">Like the Jayce plan, but keep more might.</td><td data-label="Key notes">Beat him in Swiss. Possibly the hardest matchup.</td></tr>
+    </tbody>
+  </table></div>
 </section>
 
 <section id="bf">
@@ -287,205 +527,6 @@ footer{margin-top:44px;color:var(--muted);font-size:.85rem;border-top:1px solid 
     </ul></div>
     <div class="panel"><h3>Rampage as a double-duty card <a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=1710s">28:30</a></h3>Rampage buffs your unit and kills theirs at once, but leaves yours damaged. Start a combat showdown elsewhere: every unit heals when a showdown ends, so your unit comes back as a full-health attacker. Sets up hidden lethals.</div>
   </div>
-</section>
-
-<section id="side">
-  <h2>Sideboard rules <a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=1821s">30:21</a></h2>
-  <div class="grid2">
-    <div class="panel"><dl class="rule">
-      <dt>Mindset</dt><dd>Start with the cards that feel bad in the matchup, take those out, then fill from the side. The deck is 40 good cards, so starting from what to bring in goes nowhere. After game 1, read their build (equipment or not, etc.) and adjust.</dd>
-      <dt>Flex, going first</dt><dd>Cut <strong>1 First Mate</strong> (you're on 2/4/6 runes and it collides with Yi and Rengar) and <strong>1 En Garde</strong> (dead on turns 1–2 at even rune counts).</dd>
-      <dt>Flex, going second</dt><dd>Cut <strong>two 2-drops</strong>: First Mate becomes a turn-1 play, so 12 turn-1 plays is overkill. Default: <strong>2 Lonely Poro</strong>.</dd>
-      <dt>Poro vs Scuttle</dt><dd>Against heavy removal, keep Scuttle: it dies anyway and gives hand info. When the matchup needs early might, keep Poro. Against Kennen, his turn-1 units with his legend's +2 kill Scuttle for free.</dd>
-    </dl></div>
-    <div class="panel"><h3>Mulligan &amp; tempo rules <a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=5181s">1:26:21</a></h3><ul>
-      <li>Keep a turn-1 play, a turn-2 Yi and a turn-3 play. Don't keep turn-10 cards: unlike Kennen, Yi can't filter them away.</li>
-      <li>Develop every turn. Avoid two units on board with an empty base.</li>
-      <li>Losing units for free is the main way Yi loses. Don't push a turn-1 2-drop into a board that hits 4+ might on conquer (Rengar, Diana).</li>
-      <li>Play around known removal: Moonfall, Cull, Thousand-Tailed Watcher, Bellows Breath, Falling Star.</li>
-      <li>Mulligan for Not So Fast and Defy against purple, Rengar against fair might decks, and Onslaught and Alpha Strike against hold decks (LeBlanc, Vex, Master Yi, Wuju Master).</li>
-      <li>Keep Zhonya's against heavy-removal decks (Kai'Sa, Jinx, Ezreal). Against Diana it's a blowout risk if they run Acceptable Losses.</li>
-    </ul></div>
-  </div>
-</section>
-
-<section id="skirmish">
-  <h2>Skirmish sideboard</h2>
-  <p class="lede" style="margin:0 0 14px">Ten slots for a local event. It's Ekpilot's post-ban sideboard: every card but one does its job without a read on the opponent. Assumes the post-ban main deck (2 Sabotage, 1 Zhonya's). The most you ever bring in is 6, against Jayce.</p>
-  <div class="grid2">
-    <div class="tbl"><table class="stack sk">
-      <thead><tr><th>Card</th><th>Bring in against</th></tr></thead>
-      <tbody>
-        <tr><td>3 Disarming Rake</td><td data-label="Bring in against">3 vs Jayce, Azir, Ornn. 2 vs Kennen, <span data-card="Irelia - Blade Dancer">Irelia</span>, Ezreal. 1 vs LeBlanc.</td></tr>
-        <tr><td>2 Decree of Focus</td><td data-label="Bring in against">2 vs <span data-card="Rengar - Pridestalker">Rengar</span>, Draven, <span data-card="Rek'sai - Void Burrower">Rek'Sai</span>. 1 vs <span data-card="Akali - Rogue Assassin">Akali</span>.</td></tr>
-        <tr><td>1 Ruin Runner</td><td data-label="Bring in against">Kennen, Jayce, LeBlanc, <span data-card="Irelia - Blade Dancer">Irelia</span>, Azir, Diana, Ezreal, Kha'Zix.</td></tr>
-        <tr><td>1 Sabotage</td><td data-label="Bring in against">Almost every matchup.</td></tr>
-        <tr><td>1 Alpha Strike</td><td data-label="Bring in against">LeBlanc (the second copy is a must-have there) and the Yi mirror.</td></tr>
-        <tr><td>1 Decree of Strength</td><td data-label="Bring in against">LeBlanc: takes a Ruined Rex from their hand.</td></tr>
-        <tr><td>1 Not So Fast</td><td data-label="Bring in against">Kennen, Jayce, LeBlanc, <span data-card="Irelia - Blade Dancer">Irelia</span>, Diana, Ezreal, Kha'Zix, <span data-card="Akali - Rogue Assassin">Akali</span>. Only for the targets listed here.</td></tr>
-      </tbody>
-    </table></div>
-    <div class="panel"><h3><span>Not So Fast: counter only these</span></h3>
-      <dl class="rule">
-        <dt>Kennen</dt><dd>Switcheroo, after they've used their legend.</dd>
-        <dt>Jayce</dt><dd>Elder Dragon, especially at 6 points.</dd>
-        <dt><span data-card="Irelia - Blade Dancer">Irelia</span></dt><dd>Rebuke, in the Astral Heron fight.</dd>
-        <dt><span data-card="Akali - Rogue Assassin">Akali</span></dt><dd>Falling Star or Blitzcrank.</dd>
-        <dt>Diana</dt><dd>A Moonfall that pulls a unit. Not one that only targets the battlefield.</dd>
-      </dl>
-      <p class="alts">Let everything else resolve. Without a target it's a dead card, so don't fire it at the first spell you see.</p>
-      <p class="alts"><strong>Lots of Yi players at your store?</strong> Run 1 Fiora, Peerless instead. She's a plain unit, and he brings in 2 for the mirror.</p>
-      <p class="alts"><strong>Left out:</strong> Back Off, Unyielding Spirit, Repulse. They're reactive tricks with timing windows, the same problem as Not So Fast with less upside. Ruin Runner and Sabotage can't go higher: the main deck already has 2 of each, so 3 is the cap.</p>
-    </div>
-  </div>
-</section>
-
-<section id="matchups">
-  <h2>Main matchups</h2>
-  <div class="mus">
-
-  <article class="mu" id="yi">
-    <header><h3>Master Yi mirror</h3><span class="tier even">First player favored</span><a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=2138s">35:38</a></header>
-    <div class="pick"><div class="swap">
-      <span class="lbl out">Out</span><div class="chips out"><span class="chip">2 Ruin Runner</span><span class="chip">1 Not So Fast</span></div>
-      <span class="lbl in">In</span><div class="chips in"><span class="chip">2 Fiora, Peerless</span><span class="chip">1 Sabotage</span><span class="chip">(post-ban: Sabotage + Alpha Strike)</span></div>
-    </div>
-    <span class="k">Mulligan</span><div class="chips mull"><span class="chip">Rengar</span><span class="chip">Punch First</span><span class="chip">Removal (Charm, Rampage)</span></div></div>
-    <div class="plan"><span class="k">Plan</span><ul>
-      <li>Remove every unit so their legend never triggers and they're playing a vanilla legend.</li>
-      <li><strong>Don't push early onto Grove.</strong> It hands them a free 8-might Rengar ambush. Develop the 2-drop and Yi, let them commit, then attack.</li>
-      <li>Charm + Rengar won his top-8 game going second.</li>
-    </ul>
-    <p class="alts"><strong>Local tech:</strong> Fiora, 2nd Alpha Strike, 3rd Sabotage, Vilemaw, Grim Resolve, Sterak's Gage (reusable +3, costs runes), Back Off (they'll read it as Zhonya's), Irelia.</p></div>
-  </article>
-
-  <article class="mu" id="kennen">
-    <header><h3>Kennen</h3><span class="tier">Be the aggressor</span><a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=2529s">42:09</a></header>
-    <div class="pick"><div class="swap">
-      <span class="lbl out">Out</span><div class="chips out"><span class="chip">1 Charm</span><span class="chip">1 En Garde</span><span class="chip">2 Zhonya's</span><span class="chip">1 flex</span></div>
-      <span class="lbl in">In</span><div class="chips in"><span class="chip">Ruin Runner</span><span class="chip">Not So Fast</span><span class="chip">Sabotage</span><span class="chip">2 Disarming Rake</span></div>
-    </div>
-    <span class="k">Mulligan</span><div class="chips mull"><span class="chip">Rampage</span><span class="chip">Not So Fast</span></div></div>
-    <div class="plan"><span class="k">Plan</span><ul>
-      <li><strong>Kill the rat</strong> (their chosen champion). Use Rampage, not Charm: their legend's +2 can turn a Charm against you.</li>
-      <li>Not So Fast their Switcheroo after they spend the legend: you win a 6-vs-4 fight with one card.</li>
-      <li>Take the trades. Kennen wins the late game with Last Rites, Rebukes and card draw.</li>
-      <li>Rakes kill Last Rites and the Seal: 2 Rakes, 3 if they run Edge of Night.</li>
-      <li>Zhonya's is weak: they flip it, then Rebuke.</li>
-    </ul>
-    <p class="alts"><strong>Alternatives:</strong> Alpha Strike, Twilight Shroud (blanks Switcheroo), Adaptatron (kills gear like the Seal on conquer), Disposal Order (graveyard hate, answers Fizz), Repulse, 2nd Onslaught.</p></div>
-  </article>
-
-  <article class="mu" id="jayce">
-    <header><h3>Jayce (Aurora)</h3><span class="tier hard">Hard++, the new best deck</span><a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=2816s">46:56</a></header>
-    <div class="pick"><div class="swap">
-      <span class="lbl out">Out</span><div class="chips out"><span class="chip">2 En Garde</span><span class="chip">2 Rampage</span><span class="chip">2 Punch First</span></div>
-      <span class="lbl in">In</span><div class="chips in"><span class="chip">Ruin Runner</span><span class="chip">Not So Fast</span><span class="chip">Sabotage</span><span class="chip">3 Disarming Rake</span></div>
-    </div>
-    <span class="k">Mulligan</span><div class="chips mull"><span class="chip">Charm</span><span class="chip">Not So Fast</span><span class="chip">Sabotage</span><span class="chip">Defy</span></div></div>
-    <div class="plan"><span class="k">Plan</span><ul>
-      <li>You need utility, not might: cut might and removal, bring in answers.</li>
-      <li>Two Aurora triggers end the game. Sabotage it from hand, Rake it on arrival, and Rake the Platewyrm Egg that powers out an early Aurora.</li>
-      <li><strong>On your Emperor's Dais game</strong> (going second), conquer with a Rake and use the Dais trigger to return it to hand, ready to kill the Aurora when it lands.</li>
-      <li>Before their 9-rune turn, <strong>group your units</strong> so one Elder Dragon can't clear the board.</li>
-      <li>Keep a Charm to send Elder back to base, then play Rengar for a quick conquer and a double conquer.</li>
-      <li>Once the Elder trigger's targets are locked, respond by playing Rengar onto that battlefield.</li>
-      <li>At 6 points, Not So Fast the Elder to win.</li>
-    </ul>
-    <p class="alts"><strong>Alternatives:</strong> 3rd Sabotage, Unyielding Spirit (no spell/ability damage this turn), Ambessa / Akali (dodge Elder), Steel Paws, Trinity Force (untested), Tomb-Raider Barbara (worse than Rake: can't kill a turn-2 Aurora), Esteemed Hierophant (niche).</p></div>
-  </article>
-
-  <article class="mu" id="leblanc">
-    <header><h3>LeBlanc</h3><span class="tier hard">Hard++</span><a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=3194s">53:14</a></header>
-    <div class="pick"><div class="swap">
-      <span class="lbl out">Out</span><div class="chips out"><span class="chip">2 Defy</span><span class="chip">1 flex</span><span class="chip">(going 2nd: 1 Defy + 1 Scuttle)</span></div>
-      <span class="lbl in">In</span><div class="chips in"><span class="chip">Ruin Runner</span><span class="chip">Not So Fast</span><span class="chip">1 Disarming Rake (2 if B.F. Sword)</span></div>
-    </div>
-    <span class="k">Mulligan</span><div class="chips mull"><span class="chip">Alpha Strike</span><span class="chip">Onslaught</span><span class="chip">Rampage</span></div></div>
-    <div class="plan"><span class="k">Plan</span><ul>
-      <li>Fight for both battlefields early (First Mate double conquer, hold the Grove). If LeBlanc can't conquer, her legend, Glasc Mixologist and Ruined Rex value all stall.</li>
-      <li><strong>Karthus must die.</strong> Expect it back via Mixologist.</li>
-      <li>Kill everything, including the birds whose deathknell gives them runes. They'll get that value eventually anyway.</li>
-      <li>Watcher → Punch First. Vi → Alpha Strike.</li>
-      <li>Win state: both at 6, and you have one big turn with Alpha Strike + Onslaught.</li>
-      <li>Defy only hits Hidden Blade and Deathgrip. Keep it if they run Smoke and Mirrors or Cull the Weak.</li>
-    </ul>
-    <p class="alts"><strong>Alternatives:</strong> 2nd Alpha Strike (<strong>must-have</strong>), Back Off (stuns Vi or the Watcher), 2nd Onslaught, Ambessa (attacks for 7, then defends for 9), Akali, Irelia, Vilemaw, Trinity Force.</p></div>
-  </article>
-
-  <article class="mu" id="irelia">
-    <header><h3>Irelia</h3><span class="tier">Easier, still hard</span><a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=3751s">1:02:31</a></header>
-    <div class="pick"><div class="swap">
-      <span class="lbl out">Out</span><div class="chips out"><span class="chip">2 Charm</span><span class="chip">2 Zhonya's</span><span class="chip">1 flex</span></div>
-      <span class="lbl in">In</span><div class="chips in"><span class="chip">Ruin Runner</span><span class="chip">Not So Fast</span><span class="chip">Sabotage</span><span class="chip">2 Disarming Rake</span><span class="chip">(or 2 Fiora for Ruin Runner + Not So Fast)</span></div>
-    </div>
-    <span class="k">Mulligan</span><div class="chips mull"><span class="chip">Punch First</span><span class="chip">Rengar</span><span class="chip">Rampage (for Stellacorn Herder)</span><span class="chip">Defy</span></div></div>
-    <div class="plan"><span class="k">Plan</span><ul>
-      <li>Your legend is a free En Garde every turn. Make them spend one more card than you in every fight and you outgrind them.</li>
-      <li>Count their accelerated might before pushing: Irelia accelerated with Guardian Angel hits 7, with Boots of Swiftness 8.</li>
-      <li>Before you Defy, <strong>ask whether they're using the Irelia legend</strong>, and let them finish their reactions first.</li>
-      <li>Charm is bad: it gives them a combat they can win with Rebuke or buffs. Zhonya's is fine vs midrange builds, bad vs Astral Heron.</li>
-      <li>Heron build: you'll have to fight the Heron eventually. Not So Fast their Rebuke, then Ruin Runner + Punch First, or Ruin Runner + Onslaught + Alpha Strike.</li>
-      <li>Protect-the-queen build: bring <strong>Fiora, Peerless</strong> instead of Ruin Runner and Not So Fast. This won his round 11.</li>
-    </ul>
-    <p class="alts"><strong>Alternatives:</strong> Back Off (catches them mid-buff war), Twilight Shroud, Tomb-Raider Barbara and Akshan (gear removal; Akshan steals the gear), Grim Resolve, Irelia, Crumbling Sands, Sterak's Gage.</p></div>
-  </article>
-
-  <article class="mu" id="rengar">
-    <header><h3>Rengar</h3><span class="tier even">Even, slight Yi edge</span><a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=4302s">1:11:42</a></header>
-    <div class="pick"><div class="swap">
-      <span class="lbl out">Out</span><div class="chips out"><span class="chip">2 Ruin Runner</span><span class="chip">Not So Fast</span></div>
-      <span class="lbl in">In</span><div class="chips in"><span class="chip">2 Decree of Focus</span><span class="chip">Sabotage</span></div>
-    </div>
-    <span class="k">Mulligan</span><div class="chips mull"><span class="chip">Punch First</span><span class="chip">Rengar</span><span class="chip">Charm</span><span class="chip">Alpha Strike</span></div></div>
-    <div class="plan"><span class="k">Plan</span><ul>
-      <li>Track their might from open runes: 2 = Inferna (+4), 3 = Punch First, 4 = accelerated 5-might, 5 = Rengar.</li>
-      <li>Cutting 1–2 Defy is still an option but less appealing now: they run 3 Rampage + 3 Thrill of the Hunt worth countering.</li>
-      <li>You have more card draw, so play for the late game. Rengar is much stronger attacking; keep units home when they hold a lot of might.</li>
-      <li>Don't tap out into an early Rampage. Losing units for free is how this matchup is lost.</li>
-      <li>Kill the Fae Porter: it brings a unit along for a 7-might Rengar slam, especially on Star Spring.</li>
-      <li>Watch for Thrill of the Hunt: units jumping battlefields, or a point stolen on your turn.</li>
-      <li><strong>Decree ruling:</strong> if they Thrill the Fury unit out after you cast Decree, the Decree fizzles. Defy the Thrill.</li>
-    </ul>
-    <p class="alts"><strong>Alternatives:</strong> Back Off, Alpha Strike, Irelia, Grim Resolve (better with Irelia), Vilemaw, Sterak's Gage (meh), Elder Dragon (meme).</p></div>
-  </article>
-
-  <article class="mu" id="azir">
-    <header><h3>Azir</h3><span class="tier hard">Tough</span><a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=4795s">1:19:55</a></header>
-    <div class="pick"><div class="swap">
-      <span class="lbl out">Out</span><div class="chips out"><span class="chip">Not So Fast</span><span class="chip">En Garde</span><span class="chip">2 Zhonya's</span><span class="chip">1 flex</span></div>
-      <span class="lbl in">In</span><div class="chips in"><span class="chip">3 Disarming Rake</span><span class="chip">Ruin Runner</span><span class="chip">Sabotage</span></div>
-    </div>
-    <span class="k">Mulligan</span><div class="chips mull"><span class="chip">Defy</span><span class="chip">Sabotage</span><span class="chip">Rampage / Charm</span><span class="chip">Rengar</span></div></div>
-    <div class="plan"><span class="k">Plan</span><ul>
-      <li>Aggro deck on a 4-6-8 curve. Beat it with one strong hold turn, then run them out of units.</li>
-      <li>Rengar's 6 attack / 8 defense is awkward for them. They need Sand Soldier + 2 B.F. Swords or Brutalizers to beat it.</li>
-      <li>Game 1 is hard with no equipment hate. Rakes plus the Dais loop take their +3s away.</li>
-      <li>Defy their hidden hold cards: Back Off, Hidden Blade, Guards! (+5).</li>
-      <li>Rampage, not Charm, on Azir's chosen champion: Charm him in and he brings all his units.</li>
-      <li>Watch for Vi: a 3-might attacker + Vi is 8 and kills Rengar for free.</li>
-    </ul>
-    <p class="alts"><strong>Alternatives:</strong> Akshan (steal a B.F. Sword, then defend for 9), Adaptatron, Tomb-Raider Barbara, Irelia, Back Off, Alpha Strike, Grim Resolve, Wind Wall vs Arise! (meme).</p></div>
-  </article>
-
-  </div>
-</section>
-
-<section id="rapid">
-  <h2>Rapid-fire matchups <a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=5410s">1:30:10</a></h2>
-  <div class="tbl"><table class="stack">
-    <thead><tr><th>Deck</th><th>Out</th><th>In</th><th>Key notes</th></tr></thead>
-    <tbody>
-      <tr><td>Akali <a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=5410s">1:30:10</a></td><td data-label="Out">Zhonya's, 2 flex (going first, make one flex a Charm rather than En Garde)</td><td data-label="In">Not So Fast, 1 Decree of Focus, Sabotage</td><td data-label="Key notes">Kill the Stellacorn Herder (draw engine) on sight. Not So Fast stops Falling Star and Blitzcrank. Your legend's +2 doesn't apply when she <em>moves in</em> (Void Gate damage), only when she moves out. Decree of Focus is normally dead against Heron (not a Fury unit), but it becomes live if they flip a Fury unit like Marai into that fight.</td></tr>
-      <tr><td>Diana <a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=5555s">1:32:35</a></td><td data-label="Out">Onslaught, Punch First, Charm</td><td data-label="In">Ruin Runner, Not So Fast, Sabotage</td><td data-label="Key notes">First 3 turns: develop in base only. Always keep Rampage. Charm is bad because it pulls in their best unit as an 8. Not So Fast can't counter a Moonfall that targets the battlefield, only one that pulls a unit. Watch for Kha'Zix and Switcheroo.</td></tr>
-      <tr><td>Draven <a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=5674s">1:34:34</a></td><td data-label="Out">3 Defy, flex (cut 1–3 Defy depending on build; if they run Star-Crossed or other Defy targets, keep those Defy and cut Zhonya's instead)</td><td data-label="In">2 Decree of Focus, Sabotage, Ruin Runner</td><td data-label="Key notes">Decree's +4 wrecks them, especially vs Spinning Axe. Sabotage forces an Axe on your turn, then Charm kills unit and Axe together. Don't give Scuttle away for free. Watch Cleave (+3) and accelerated <span data-card="Kha'Zix - Mutating Horror">Kha'Zix</span>, <span data-card="Darius - Trifarian">Darius</span> and Rek'Sai.</td></tr>
-      <tr><td>Ezreal <a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=5788s">1:36:28</a></td><td data-label="Out">Onslaught, Rampage, Charm, Alpha Strike, Punch First</td><td data-label="In">2 Disarming Rake, Ruin Runner, Not So Fast, Sabotage</td><td data-label="Key notes">They barely hold; <span data-card="Vex - Apathetic">Vex</span> is the most they hold with. Kill the Pack of Wonders gear fast. Prismat ran this same plan.</td></tr>
-      <tr><td>Kha'Zix <a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=5863s">1:37:43</a></td><td data-label="Out">2 Zhonya's, flex</td><td data-label="In">Ruin Runner, Not So Fast, Sabotage</td><td data-label="Key notes">Very tough. Their purple chosen champion becomes a 7-might defender. Lots of Star-Crossed and Rebuke make Zhonya's bad. Keep Rampage for Kha'Zix and Fae Porter, and watch that combo on Star Spring.</td></tr>
-      <tr><td>Rek'Sai <a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=5914s">1:38:34</a></td><td data-label="Out">2 Ruin Runner, flex</td><td data-label="In">2 Decree of Focus, Sabotage</td><td data-label="Key notes">Full red aggro. Sabotage takes Hidden Blade or Falling Star and reveals odd techs like Imperial Decree.</td></tr>
-      <tr><td>Ornn <a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=5940s">1:39:00</a></td><td data-label="Out">2 Ruin Runner, Charm, Zhonya's</td><td data-label="In">3 Disarming Rake, Sabotage</td><td data-label="Key notes">Their might comes from gear, so kill every Sterak's and Brutalizer. Their +3s beat your +2. Don't let them get an early hold, and don't attack into Brutalizers. The Ornn player claims he's favored.</td></tr>
-      <tr><td>Fiora (Rengar/Kayle hybrid)</td><td colspan="2">Like the Jayce plan, but keep more might</td><td data-label="Key notes">Beat him in Swiss. Possibly the hardest matchup.</td></tr>
-    </tbody>
-  </table></div>
 </section>
 
 <section id="general">
