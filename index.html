@@ -160,9 +160,9 @@ dialog#card::backdrop{background:rgb(10 14 12/.72)}
 html{scrollbar-gutter:stable} /* no layout shift when the lock removes the scrollbar */
 html:has(dialog#card:modal){overflow:hidden}
 dialog#card{overscroll-behavior:contain}
-/* Open/close transition: answers the click, so it's the one place the page animates */
+/* Open transition: answers the click, so it's the one place the page animates. Only the [open] state transitions, so closing is instant. */
 @media (prefers-reduced-motion:no-preference){
-  dialog#card,dialog#card::backdrop{transition:opacity .18s,translate .18s,overlay .18s allow-discrete,display .18s allow-discrete}
+  dialog#card[open],dialog#card[open]::backdrop{transition:opacity .18s,translate .18s,overlay .18s allow-discrete,display .18s allow-discrete}
   dialog#card:not([open]),dialog#card:not([open])::backdrop{opacity:0}
   dialog#card:not([open]){translate:0 12px}
   @starting-style{dialog#card[open],dialog#card[open]::backdrop{opacity:0} dialog#card[open]{translate:0 12px}}
@@ -171,18 +171,13 @@ dialog#card{overscroll-behavior:contain}
 .sheet img{width:100%;height:auto;border-radius:10px;display:block;background:var(--sunk);aspect-ratio:744/1039}
 .sheet img.land{aspect-ratio:1039/744}
 dialog#card.land{max-width:min(100vw - 24px,1039px,calc((100dvh - 110px) * 1.397 + 26px))}
-.sheet.zoom .imgbox img.land{width:1039px}
-.sheet .imgbox{overflow:auto;border-radius:10px;max-height:calc(100dvh - 110px)}
-.sheet .imgbox img{cursor:zoom-in}
-.sheet.zoom .imgbox img{width:744px;max-width:none;cursor:zoom-out}
 .sheet .hint{font-size:.75rem;color:var(--muted);text-align:center;margin:0}
-.sheet .hd{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.sheet .hd{padding:0 2px}
 .sheet .nm{font:700 1.05rem var(--display);margin:0}
 .sheet .mt{font-size:.82rem;color:var(--muted)}
-.sheet .x{font:600 .9rem var(--display);background:var(--sunk);color:var(--fg);border:0;border-radius:8px;min-height:40px;padding:0 14px;cursor:pointer}
+dialog#card{cursor:pointer} /* any click closes it */
 @media (max-width:640px){
   dialog#card .sheet{padding:10px 8px}
-  dialog#card .sheet .hd{padding:0 4px}
 }
 /* phone layout */
 @media (max-width:720px){
@@ -633,10 +628,10 @@ footer{margin-top:44px;color:var(--muted);font-size:.85rem;border-top:1px solid 
 <div id="tip" popover="hint" aria-hidden="true"><img alt=""></div>
 <dialog id="card" aria-label="Card preview" closedby="any">
   <div class="sheet">
-    <div class="hd"><div><p class="nm" id="cardName"></p><div class="mt" id="cardMeta"></div></div><button class="x" type="button" commandfor="card" command="close">Close</button></div>
-    <div class="imgbox" id="cardBox"><img id="cardImg" alt=""></div>
-    <p class="hint" id="cardHint">Tap the card to zoom</p>
-    <p class="mt" id="cardFallback" hidden>The preview image can't load here. <a id="cardLink" href="#" target="_blank" rel="noopener">Open the card image</a></p>
+    <div class="hd"><p class="nm" id="cardName"></p><div class="mt" id="cardMeta"></div></div>
+    <img id="cardImg" alt="">
+    <p class="mt" id="cardFallback" hidden>The card image didn't load. Check your connection and open the card again.</p>
+    <p class="hint">Tap anywhere to close</p>
   </div>
 </dialog>
 <script>
@@ -677,9 +672,8 @@ function link(root){
   }
 }
 link(document.querySelector('main'));
-const dlg=document.getElementById('card'),sheet=dlg.querySelector('.sheet'),box=document.getElementById('cardBox'),img=document.getElementById('cardImg'),
-  nm=document.getElementById('cardName'),mt=document.getElementById('cardMeta'),hint=document.getElementById('cardHint'),
-  fb=document.getElementById('cardFallback'),lk=document.getElementById('cardLink');
+const dlg=document.getElementById('card'),img=document.getElementById('cardImg'),
+  nm=document.getElementById('cardName'),mt=document.getElementById('cardMeta'),fb=document.getElementById('cardFallback');
 function info(name){const c=D.cards[name];if(!c)return '';
   const p=[(c.dom&&c.dom.length?c.dom.join(' / ')+' ':'')+c.type.toLowerCase()];
   if(c.e!=null)p.push(c.e+' energy');if(c.m!=null)p.push(c.m+' might');const t=p.join(', ');return t[0].toUpperCase()+t.slice(1);}
@@ -690,14 +684,14 @@ dlg.addEventListener('command',e=>{
   if(!c){e.preventDefault();return;}
   const land=c.type==='Battlefield';
   nm.textContent=name.replace(' - ',', ');mt.textContent=info(name);
-  sheet.classList.remove('zoom');hint.textContent='Tap the card to zoom';hint.hidden=false;fb.hidden=true;
+  fb.hidden=true;
   img.className=land?'land':'';dlg.classList.toggle('land',land);
-  img.hidden=false;img.style.visibility='hidden';img.alt=name+' card';lk.href=c.img;img.src=c.img;
-  box.scrollTo(0,0);
+  img.hidden=false;img.style.visibility='hidden';img.alt=name+' card';img.src=c.img;
 });
 img.addEventListener('load',()=>{img.style.visibility='';});
-img.addEventListener('error',()=>{if(!img.getAttribute('src'))return;img.hidden=true;fb.hidden=false;hint.hidden=true;});
-img.addEventListener('click',()=>{hint.textContent=sheet.classList.toggle('zoom')?'Tap the card to fit the screen':'Tap the card to zoom';});
+img.addEventListener('error',()=>{if(!img.getAttribute('src'))return;img.hidden=true;fb.hidden=false;});
+// Any click inside the open dialog (card, header or backdrop) closes it.
+dlg.addEventListener('click',()=>dlg.close());
 // Closing returns focus to the opener, and interestfor treats that focus as interest: keep its preview quiet
 // until the opener is hovered afresh or loses focus.
 // If the pointer is still over it, Chrome also sends a synthetic pointerenter once the dialog is gone, so then wait for a real leave.
