@@ -165,9 +165,9 @@ dialog#card::backdrop{background:rgb(10 14 12/.72)}
 html{scrollbar-gutter:stable} /* no layout shift when the lock removes the scrollbar */
 html:has(dialog#card:modal){overflow:hidden}
 dialog#card{overscroll-behavior:contain}
-/* Open transition: answers the click, so it's the one place the page animates. Only the [open] state transitions, so closing is instant. */
+/* Open/close transition: the one place the page animates. overlay + display (allow-discrete) keep the dialog in the top layer while it fades out. */
 @media (prefers-reduced-motion:no-preference){
-  dialog#card[open],dialog#card[open]::backdrop{transition:opacity .18s,translate .18s,overlay .18s allow-discrete,display .18s allow-discrete}
+  dialog#card,dialog#card::backdrop{transition:opacity .18s,translate .18s,overlay .18s allow-discrete,display .18s allow-discrete}
   dialog#card:not([open]),dialog#card:not([open])::backdrop{opacity:0}
   dialog#card:not([open]){translate:0 12px}
   @starting-style{dialog#card[open],dialog#card[open]::backdrop{opacity:0} dialog#card[open]{translate:0 12px}}
