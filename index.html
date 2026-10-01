@@ -1,0 +1,679 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Ekpilot's Master Yi Notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Source+Sans+3:wght@400;600;700&display=swap">
+<style>
+/* Layout: field-manual reference sheet — sticky jump bar, one matchup per row (pick list | plan), Out/In chips as the primary glance target.
+   Type: Chakra Petch for structure, Source Sans 3 for everything else; sentence case, hierarchy from weight and size.
+   Current Chrome only: light-dark(), scroll-target-group/:target-current, interestfor + anchor positioning, command/commandfor, closedby. */
+:root{
+  color-scheme:light dark;
+  --bg:light-dark(#f3f5f2,#121815); --surface:light-dark(#ffffff,#19211d); --sunk:light-dark(#e8ece7,#202a25); --line:light-dark(#d3dad2,#2f3b35);
+  --fg:light-dark(#1b2420,#e3ebe6); --muted:light-dark(#5b6862,#97a69e);
+  --calm:light-dark(#1f7a58,#5fcf9f); --calm-bg:light-dark(#dcefe5,#1d3a2d);   /* Calm rune green: IN */
+  --body:light-dark(#b4501c,#f0935f); --body-bg:light-dark(#f8e3d6,#3f2618);   /* Body rune orange: OUT */
+  --warn:light-dark(#8a6a00,#e3c35a); --warn-bg:light-dark(#f6edcc,#3a321a);
+  --display:"Chakra Petch", "Arial Narrow", system-ui, sans-serif;
+  --text:"Source Sans 3", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --nav-h:58px;
+  scroll-padding-top:calc(var(--nav-h) + 10px);
+}
+:root[data-theme="light"]{color-scheme:light}
+:root[data-theme="dark"]{color-scheme:dark}
+@media (prefers-reduced-motion:no-preference){ :root{scroll-behavior:smooth} }
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font:15px/1.5 var(--text);margin:0}
+p,li,dd{text-wrap:pretty}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:16px;padding-block:28px 64px}
+a{color:var(--calm)}
+a:focus-visible,summary:focus-visible{outline:2px solid var(--calm);outline-offset:2px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.15}
+h1{font-size:clamp(1.7rem,4vw,2.4rem);font-weight:700;letter-spacing:.01em}
+h2{font-size:1.5rem;font-weight:700;margin-bottom:12px}
+h3{font-size:1.1rem;font-weight:600}
+.lede{color:var(--muted);max-width:68ch;margin:8px 0 0}
+.meta{display:flex;flex-wrap:wrap;gap:8px 32px;margin:16px 0 0}
+.meta dt{font-size:.82rem;color:var(--muted)}
+.meta dd{margin:0;font:600 1rem var(--display)}
+/* timestamps jump into the video: a play-marker pill, not a data label */
+.ts{font:600 .78rem/1.5 var(--text);font-variant-numeric:tabular-nums;color:var(--muted);text-decoration:none;white-space:nowrap;background:var(--sunk);border-radius:999px;padding:1px 8px 1px 7px;display:inline-flex;align-items:center;gap:5px;vertical-align:.1em}
+.ts::before{content:"";border-block:4px solid transparent;border-left:6px solid currentColor}
+.ts:hover{color:var(--calm);background:var(--calm-bg)}
+
+/* Scroll-spy without JS: scroll-target-group makes the in-page links scroll markers, and the
+   browser matches the one whose target is current with :target-current. */
+nav.jump{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line);margin:22px -16px 0;padding:10px 16px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:thin;scroll-padding-inline:16px;overscroll-behavior-x:contain;scroll-target-group:auto}
+nav.jump a{font:600 .88rem var(--display);text-decoration:none;color:var(--fg);background:var(--sunk);padding:5px 10px;border-radius:4px;white-space:nowrap;transition:background-color .15s,color .15s}
+nav.jump a:hover{background:var(--calm-bg);color:var(--calm)}
+nav.jump a:target-current{background:var(--calm);color:var(--surface)}
+
+section{margin-top:36px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:14px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:14px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:14px 16px;min-width:0}
+.panel h3{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:8px}
+ul{margin:0;padding-left:1.1em}
+li{margin:3px 0}
+li::marker{color:var(--muted)}
+.k{font:600 .85rem var(--display);color:var(--muted);display:block;margin:12px 0 4px}
+
+/* deck list */
+.deck{columns:2 200px;column-gap:24px;font-variant-numeric:tabular-nums;margin:0;padding:0;list-style:none}
+.deck li{display:flex;gap:8px;break-inside:avoid;margin:2px 0}
+.deck b{font-weight:600;min-width:1.6em;color:var(--muted)}
+.delta{font-size:.8rem;padding:0 6px;border-radius:3px}
+.delta.out{background:var(--body-bg);color:var(--body)}
+.delta.in{background:var(--calm-bg);color:var(--calm)}
+
+/* matchup cards: one per row so each nav target has its own top edge (side-by-side targets tie for :target-current) */
+.mus{display:grid;gap:14px}
+.mu{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px;min-width:0;display:flex;flex-direction:column;gap:2px}
+.mu header{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 10px;margin-bottom:6px}
+.mu header h3{font-size:1.3rem}
+@media (min-width:900px){
+  .mu{display:grid;grid-template-columns:minmax(17rem,24rem) minmax(0,1fr);column-gap:36px;align-items:start}
+  .mu>header{grid-column:1/-1}
+  .mu .plan{max-width:72ch}
+  .mu .plan>.k:first-child{margin-top:8px}
+}
+.tier{font:600 .82rem var(--display);padding:1px 8px;border-radius:3px;background:var(--sunk);color:var(--muted)}
+.tier.hard{background:var(--body-bg);color:var(--body)}
+.tier.even{background:var(--warn-bg);color:var(--warn)}
+.swap{display:grid;grid-template-columns:auto 1fr;gap:6px 10px;align-items:start;margin:8px 0 4px}
+.swap .lbl{font:700 .82rem var(--display);letter-spacing:.02em;padding:3px 7px;border-radius:3px;text-align:center}
+.swap .lbl.out{background:var(--body);color:var(--surface)}
+.swap .lbl.in{background:var(--calm);color:var(--surface)}
+.chips{display:flex;flex-wrap:wrap;gap:4px}
+.chip{font-size:.85rem;padding:1px 8px;border-radius:3px;white-space:nowrap}
+.out .chip,.chips.out .chip{background:var(--body-bg);color:var(--body)}
+.chips.in .chip{background:var(--calm-bg);color:var(--calm)}
+.chips.mull .chip{background:var(--sunk);color:var(--fg)}
+.alts{font-size:.88rem;color:var(--muted);margin-top:6px}
+.alts strong{color:var(--fg);font-weight:600}
+
+/* rapid fire table */
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:6px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:760px;font-size:.9rem}
+th,td{text-align:left;vertical-align:top;padding:9px 12px;border-bottom:1px solid var(--line)}
+th{font:600 .85rem var(--display);color:var(--muted);background:var(--sunk)}
+tr:last-child td{border-bottom:0}
+td:first-child{font-family:var(--display);font-weight:600;white-space:nowrap}
+
+.rule{display:grid;grid-template-columns:auto 1fr;gap:4px 12px}
+.rule dt{font:600 .85rem var(--display);color:var(--calm);white-space:nowrap}
+.rule dd{margin:0}
+.cmp{min-width:0}
+.cmp td.n{text-align:center;font-weight:600;font-variant-numeric:tabular-nums;width:4.5em}
+.cmp td.z{color:var(--muted)}
+.cmp th:not(:first-child){text-align:center;line-height:1.2;white-space:nowrap}
+.cmp tr.diff td{background:var(--warn-bg)}
+.cmp tr.grp td{font:600 .85rem var(--display);color:var(--muted);background:var(--sunk);padding-block:5px}
+.cmp td{padding-block:5px}
+.cmp.side{min-width:420px}
+table.sk{min-width:0}
+.cmp.side td:first-child{color:var(--muted)}
+/* card links + preview */
+.cl{font:inherit;color:inherit;background:none;border:0;padding:0;margin:0;cursor:pointer;text-decoration:underline dotted;text-decoration-color:var(--muted);text-underline-offset:3px;text-align:inherit;line-height:inherit;letter-spacing:inherit;text-transform:inherit}
+.cl:hover{text-decoration-style:solid;text-decoration-color:currentColor}
+.cl:focus-visible{outline:2px solid var(--calm);outline-offset:1px;border-radius:2px}
+.nw{white-space:nowrap}
+/* Hover/focus preview: a hint popover opened by interestfor, placed next to its invoker with anchor positioning.
+   span-all + the default anchor-center alignment keeps the card inside the viewport vertically; flip-inline handles the right edge. */
+.cl{interest-delay:150ms 0ms}
+#tip{margin:0 14px;padding:0;border:0;background:var(--sunk);border-radius:10px;overflow:hidden;pointer-events:none;box-shadow:0 10px 30px rgb(0 0 0/.35);
+  position-area:right span-all;position-try-fallbacks:flip-inline;width:min(400px,40vw,calc((100dvh - 24px) * 0.716));aspect-ratio:744/1039}
+#tip.land{width:min(580px,52vw,calc((100dvh - 24px) * 1.397));aspect-ratio:1039/744}
+#tip img{width:100%;height:100%;display:block;opacity:0}
+#tip.ready img{opacity:1}
+dialog#card{border:0;padding:0;background:transparent;max-width:min(94vw,744px,calc((100dvh - 110px) * 0.716 + 26px));max-height:100dvh;width:100%;color:var(--fg)}
+dialog#card::backdrop{background:rgb(10 14 12/.72)}
+/* Open/close transition: answers the click, so it's the one place the page animates */
+@media (prefers-reduced-motion:no-preference){
+  dialog#card,dialog#card::backdrop{transition:opacity .18s,translate .18s,overlay .18s allow-discrete,display .18s allow-discrete}
+  dialog#card:not([open]),dialog#card:not([open])::backdrop{opacity:0}
+  dialog#card:not([open]){translate:0 12px}
+  @starting-style{dialog#card[open],dialog#card[open]::backdrop{opacity:0} dialog#card[open]{translate:0 12px}}
+}
+.sheet{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:10px}
+.sheet img{width:100%;height:auto;border-radius:10px;display:block;background:var(--sunk);aspect-ratio:744/1039}
+.sheet img.land{aspect-ratio:1039/744}
+dialog#card.land{max-width:min(94vw,1039px,calc((100dvh - 110px) * 1.397 + 26px))}
+.sheet.zoom .imgbox img.land{width:1039px}
+.sheet .imgbox{overflow:auto;border-radius:10px;max-height:calc(100dvh - 110px)}
+.sheet .imgbox img{cursor:zoom-in}
+.sheet.zoom .imgbox img{width:744px;max-width:none;cursor:zoom-out}
+.sheet .hint{font-size:.75rem;color:var(--muted);text-align:center;margin:0}
+.sheet .hd{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.sheet .nm{font:700 1.05rem var(--display);margin:0}
+.sheet .mt{font-size:.82rem;color:var(--muted)}
+.sheet .x{font:600 .9rem var(--display);background:var(--sunk);color:var(--fg);border:0;border-radius:8px;min-height:40px;padding:0 14px;cursor:pointer}
+@media (max-width:640px){
+  dialog#card{max-width:100vw;margin:auto 0 0;width:100vw}
+  dialog#card .sheet{border-radius:16px 16px 0 0;padding:10px 8px calc(12px + env(safe-area-inset-bottom,0px));max-height:96dvh}
+  dialog#card .sheet .imgbox{max-height:calc(96dvh - 90px)}
+  dialog#card .sheet .hd{padding:0 4px}
+}
+/* phone layout */
+@media (max-width:720px){
+  table.stack{min-width:0}
+  table.stack thead{display:none}
+  table.stack,table.stack tbody,table.stack tr,table.stack td{display:block;width:auto}
+  table.stack tr{padding:10px 12px;border-bottom:1px solid var(--line)}
+  table.stack tr:last-child{border-bottom:0}
+  table.stack td{border:0;padding:3px 0}
+  table.stack td[data-label]::before{content:attr(data-label);display:block;font:600 .8rem var(--display);color:var(--muted)}
+  table.stack td:first-child{font-size:1.05rem;padding-bottom:4px}
+  table.stack td:first-child::before{display:none}
+  .cmp.side{min-width:0}
+}
+@media (pointer:coarse){
+  nav.jump a{padding:9px 12px;font-size:.85rem}
+  .ts{padding:3px 8px}
+  .cl{padding-block:2px;margin-block:-2px}
+}
+@media (max-width:520px){
+  body{font-size:15.5px}
+  .mu{padding:14px}
+  .mu header h3{font-size:1.2rem}
+}
+footer{margin-top:44px;color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);padding-top:14px}
+@media (max-width:520px){ .rule{grid-template-columns:1fr} .rule dd{margin-bottom:8px} }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+<header>
+  <h1>Master Yi: Ekpilot's <span class="nw">Top-4</span> Guide, Condensed</h1>
+  <p class="lede">Ekpilot's <a href="https://www.youtube.com/watch?v=JtfcgYfdU4c">Singapore RQ top-4 Master Yi guide</a> on one page. Matchup sideboard plans assume the Singapore list.</p>
+  <dl class="meta"><div><dt>Legend</dt><dd>Master Yi, Wuju Bladesman</dd></div><div><dt>Chosen champion</dt><dd>Master Yi, Tempered</dd></div><div><dt>Runes</dt><dd>7 Body, 5 Calm</dd></div></dl>
+</header>
+
+<nav class="jump" aria-label="Sections">
+  <a href="#deck">Deck</a><a href="#bf">Battlefields</a><a href="#cards">Card notes</a><a href="#tricks">Tricks</a><a href="#side">Sideboard rules</a><a href="#skirmish">Skirmish 10</a>
+  <a href="#yi">Yi</a><a href="#kennen">Kennen</a><a href="#jayce">Jayce</a><a href="#leblanc">LeBlanc</a><a href="#irelia">Irelia</a><a href="#rengar">Rengar</a><a href="#azir">Azir</a><a href="#rapid">Others</a><a href="#general">General</a><a href="#lists">LA top 8</a>
+</nav>
+
+<main>
+<section id="deck">
+  <h2>Deck <a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=73s">1:13</a> <a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=205s">3:25</a></h2>
+  <div class="grid2">
+    <div class="panel">
+      <h3>Main 40 <span class="delta out">Post-ban changes marked</span></h3>
+      <ul class="deck">
+        <li><b>3</b>Lonely Poro</li><li><b>3</b>Pit Rookie</li><li><b>3</b>Scuttle Crab</li><li><b>3</b>First Mate</li>
+        <li><b>3</b>Rengar, Trophy Hunter</li><li><b>2</b>Ruin Runner</li>
+        <li><b>2</b>En Garde</li><li><b>3</b>Punch First</li><li><b>3</b>Discipline</li><li><b>1</b>Onslaught</li>
+        <li><b>3</b>Charm</li><li><b>2</b>Rampage</li><li><b>1</b>Alpha Strike</li>
+        <li><b>3</b>Defy</li><li><b>1</b>Not So Fast</li>
+        <li><b>1</b>Sabotage <span class="delta in">+1 → 2</span></li>
+        <li><b>2</b>Zhonya's Hourglass <span class="delta out">−1 → 1</span></li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h3>Sideboard 10</h3>
+      <ul class="deck">
+        <li><b>3</b>Disarming Rake</li><li><b>2</b>Decree of Focus</li><li><b>1</b>Sabotage</li><li><b>1</b>Not So Fast</li><li><b>1</b>Ruin Runner</li>
+        <li><b>2</b>Fiora, Peerless <span class="delta out">cut</span></li>
+        <li><b>—</b>Alpha Strike #2 <span class="delta in">add</span></li>
+        <li><b>—</b>Decree of Strength <span class="delta in">add</span></li>
+      </ul>
+      <span class="k">Why the post-ban changes</span>
+      <ul>
+        <li>Fewer Yi mirrors; Jayce and LeBlanc, the worst matchups, are up. A second Sabotage hits LeBlanc's Mirror Image and Baited Hook and Jayce's Dazzling Aurora. Fiora was mirror tech, so she goes.</li>
+        <li>The second Alpha Strike and Decree of Strength are for LeBlanc. Decree of Strength takes a Ruined Rex from their hand.</li>
+        <li><strong>For LA:</strong> 1–2 Back Off in main. Nobody expects it, the same way Not So Fast caught people in Singapore.</li>
+        <li>Also worth testing: Ambessa, Unyielding Spirit, Akali.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="bf">
+  <h2>Battlefields <a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=1167s">19:27</a></h2>
+  <div class="grid3">
+    <div class="panel"><h3>Star Spring <span class="tier">Game 1 / blind</span></h3>Replaces the usual Seat of Power. First Mate + a 2-drop gives an early double conquer. Vs Kennen, push the 2-drop, play Yi onto Spring as a 6-might defender, and move the other unit back. Best blind pick against Aurora.</div>
+    <div class="panel"><h3>Grove of the God-Willow <span class="tier">Going first</span></h3>Few Diana or early-hold decks are left to punish a Grove opener. The card draw fixes Yi's resource problem, and in the mirror whoever controls Grove wins. Watch for Rengar ambushes on it.</div>
+    <div class="panel"><h3>Emperor's Dais <span class="tier">Going second</span></h3>Standard pick. Enables the Disarming Rake loop: conquer with the Rake, return it to hand, kill another gear next turn.</div>
+  </div>
+</section>
+
+<section id="cards">
+  <h2>Card notes <a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=364s">6:04</a> – <a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=1167s">19:27</a></h2>
+  <div class="grid3">
+    <div class="panel"><h3>Core, don't touch</h3><ul>
+      <li><strong>Rengar:</strong> 6-might defender, 8 on a surprise defense. Your best attacker from hand.</li>
+      <li><strong>Ruin Runner:</strong> can't be chosen by enemy spells or abilities, so Elder Dragon and most of Kennen's interaction can't touch it.</li>
+      <li><strong>En Garde / Punch First / Discipline:</strong> the reason to play these colors.</li>
+      <li><strong>Onslaught:</strong> +6, then +6 again from the trash via Flow, so it's effectively card draw. Won both his Swiss LeBlanc games.</li>
+      <li><strong>Charm ×3:</strong> better with Kennen weaker; his Assault +2 used to cancel your legend's +2.</li>
+      <li><strong>Defy:</strong> answers Jayce/Aurora ramp, Bellows Breath and Flurry of Blades.</li>
+    </ul></div>
+    <div class="panel"><h3>Meta calls</h3><ul>
+      <li><strong>Not So Fast (1 main):</strong> stops Switcheroo, Elder Dragon, Ruined Rex triggers and Singularity, none of which Defy can hit.</li>
+      <li><strong>Alpha Strike (1 main, 1 side):</strong> effectively doubles your might for 3, at action speed, and ignores Vi's stun. Best answer to big holds. In Singapore he lost his 2nd copy on the day, played a 3rd Ruin Runner instead, and doesn't regret it.</li>
+      <li><strong>Rampage over Challenge:</strong> no rune loss, and paying a power makes it +2. Kills 4–5-might units like Kennen's chosen champion with one card.</li>
+      <li><strong>Sabotage:</strong> up to 2: more Aurora, less Kennen.</li>
+    </ul></div>
+    <div class="panel"><h3>Fringe units</h3><ul>
+      <li><strong>Steel Paws:</strong> 1-cost unit with deflect. Going second, a 2-drop + Paws (3 runes) threatens a turn-2 double conquer.</li>
+      <li><strong>Irelia, Fervent:</strong> deflect, +1 might whenever chosen or readied, so she gets over holds. Pairs with Abandoned Hall; decent vs LeBlanc and Irelia.</li>
+      <li><strong>Akali / Ambessa:</strong> 4-costs competing with Yi's turn-2 slot. They dodge Elder and Bellows and break LeBlanc holds, which makes them viable now.</li>
+      <li><strong>Vilemaw:</strong> takes 10 might to get over; shuts down Rengar decks and swarm attacks.</li>
+      <li><strong>Grim Resolve:</strong> +3 for 2, built to beat the mirror's +2.</li>
+      <li><strong>Avoid:</strong> Astral Heron (too slow to set up for a tempo deck), Legion Marauder, Mournful Witness. Elder Dragon is a meme.</li>
+    </ul></div>
+  </div>
+</section>
+
+<section id="tricks">
+  <h2>Tricks <a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=1285s">21:25</a></h2>
+  <div class="grid2">
+    <div class="panel"><h3>Zhonya's off a deathknell <a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=1290s">21:30</a></h3>You keep control of a battlefield while anything is on the chain. When they kill your Poro or Scuttle, reveal Zhonya's in response to the <em>deathknell trigger</em>. The 2-drop still dies and you draw, and Zhonya's returns to base protecting Yi instead of being spent on the 2-drop.</div>
+    <div class="panel"><h3>Ambush after the 2-drop dies <a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=1376s">22:56</a></h3>Don't commit Rengar during the combat. Let the Poro or Scuttle die: while its deathknell is on the chain the combat is still live, so play Rengar <em>before they conquer</em>. You get the +2 and win the fight, trading a Poro (and drawing a card) instead of Rengar.</div>
+    <div class="panel"><h3>Score on their turn <a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=1470s">24:30</a></h3>Let them conquer, then respond to their conquer trigger (Zaun Warrens, minefield) with Rengar. That starts a new combat with you attacking; Rengar outmights them, so you conquer and <strong>score on their turn</strong>. End-of-turn triggers like Annie and Targon's Peak work too.</div>
+    <div class="panel"><h3>Charm + Rengar, two ways <a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=1570s">26:10</a></h3><ul>
+      <li><strong>Pull in:</strong> Charm their unit onto an empty battlefield; it becomes the attacker. Rengar in on your focus makes you the defender with +2, so you win and conquer.</li>
+      <li><strong>Push out:</strong> Charm their unit (e.g. Elder Dragon) off their battlefield to base and play Rengar in response. You conquer without fighting it. A close-out play at around 7 points.</li>
+    </ul></div>
+    <div class="panel"><h3>Rampage as a double-duty card <a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=1710s">28:30</a></h3>Rampage buffs your unit and kills theirs at once, but leaves yours damaged. Start a combat showdown elsewhere: every unit heals when a showdown ends, so your unit comes back as a full-health attacker. Sets up hidden lethals.</div>
+  </div>
+</section>
+
+<section id="side">
+  <h2>Sideboard rules <a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=1821s">30:21</a></h2>
+  <div class="grid2">
+    <div class="panel"><dl class="rule">
+      <dt>Mindset</dt><dd>Start with the cards that feel bad in the matchup, take those out, then fill from the side. The deck is 40 good cards, so starting from what to bring in goes nowhere. After game 1, read their build (equipment or not, etc.) and adjust.</dd>
+      <dt>Flex, going first</dt><dd>Cut <strong>1 First Mate</strong> (you're on 2/4/6 runes and it collides with Yi and Rengar) and <strong>1 En Garde</strong> (dead on turns 1–2 at even rune counts).</dd>
+      <dt>Flex, going second</dt><dd>Cut <strong>two 2-drops</strong>: First Mate becomes a turn-1 play, so 12 turn-1 plays is overkill. Default: <strong>2 Lonely Poro</strong>.</dd>
+      <dt>Poro vs Scuttle</dt><dd>Against heavy removal, keep Scuttle: it dies anyway and gives hand info. When the matchup needs early might, keep Poro. Against Kennen, his turn-1 units with his legend's +2 kill Scuttle for free.</dd>
+    </dl></div>
+    <div class="panel"><h3>Mulligan &amp; tempo rules <a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=5181s">1:26:21</a></h3><ul>
+      <li>Keep a turn-1 play, a turn-2 Yi and a turn-3 play. Don't keep turn-10 cards: unlike Kennen, Yi can't filter them away.</li>
+      <li>Develop every turn. Avoid two units on board with an empty base.</li>
+      <li>Losing units for free is the main way Yi loses. Don't push a turn-1 2-drop into a board that hits 4+ might on conquer (Rengar, Diana).</li>
+      <li>Play around known removal: Moonfall, Cull, Thousand-Tailed Watcher, Bellows Breath, Falling Star.</li>
+      <li>Mulligan for Not So Fast and Defy against purple, Rengar against fair might decks, and Onslaught and Alpha Strike against hold decks (LeBlanc, Vex, Master Yi, Wuju Master).</li>
+      <li>Keep Zhonya's against heavy-removal decks (Kai'Sa, Jinx, Ezreal). Against Diana it's a blowout risk if they run Acceptable Losses.</li>
+    </ul></div>
+  </div>
+</section>
+
+<section id="skirmish">
+  <h2>Skirmish sideboard</h2>
+  <p class="lede" style="margin:0 0 14px">Ten slots for a local event. It's Ekpilot's post-ban sideboard: every card but one does its job without a read on the opponent. Assumes the post-ban main deck (2 Sabotage, 1 Zhonya's). The most you ever bring in is 6, against Jayce.</p>
+  <div class="grid2">
+    <div class="tbl"><table class="stack sk">
+      <thead><tr><th>Card</th><th>Bring in against</th></tr></thead>
+      <tbody>
+        <tr><td>3 Disarming Rake</td><td data-label="Bring in against">3 vs Jayce, Azir, Ornn. 2 vs Kennen, <span data-card="Irelia - Blade Dancer">Irelia</span>, Ezreal. 1 vs LeBlanc.</td></tr>
+        <tr><td>2 Decree of Focus</td><td data-label="Bring in against">2 vs <span data-card="Rengar - Pridestalker">Rengar</span>, Draven, <span data-card="Rek'sai - Void Burrower">Rek'Sai</span>. 1 vs <span data-card="Akali - Rogue Assassin">Akali</span>.</td></tr>
+        <tr><td>1 Ruin Runner</td><td data-label="Bring in against">Kennen, Jayce, LeBlanc, <span data-card="Irelia - Blade Dancer">Irelia</span>, Azir, Diana, Ezreal, Kha'Zix.</td></tr>
+        <tr><td>1 Sabotage</td><td data-label="Bring in against">Almost every matchup.</td></tr>
+        <tr><td>1 Alpha Strike</td><td data-label="Bring in against">LeBlanc (the second copy is a must-have there) and the Yi mirror.</td></tr>
+        <tr><td>1 Decree of Strength</td><td data-label="Bring in against">LeBlanc: takes a Ruined Rex from their hand.</td></tr>
+        <tr><td>1 Not So Fast</td><td data-label="Bring in against">Kennen, Jayce, LeBlanc, <span data-card="Irelia - Blade Dancer">Irelia</span>, Diana, Ezreal, Kha'Zix, <span data-card="Akali - Rogue Assassin">Akali</span>. Only for the targets listed here.</td></tr>
+      </tbody>
+    </table></div>
+    <div class="panel"><h3><span>Not So Fast: counter only these</span></h3>
+      <dl class="rule">
+        <dt>Kennen</dt><dd>Switcheroo, after they've used their legend.</dd>
+        <dt>Jayce</dt><dd>Elder Dragon, especially at 6 points.</dd>
+        <dt><span data-card="Irelia - Blade Dancer">Irelia</span></dt><dd>Rebuke, in the Astral Heron fight.</dd>
+        <dt><span data-card="Akali - Rogue Assassin">Akali</span></dt><dd>Falling Star or Blitzcrank.</dd>
+        <dt>Diana</dt><dd>A Moonfall that pulls a unit. Not one that only targets the battlefield.</dd>
+      </dl>
+      <p class="alts">Let everything else resolve. Without a target it's a dead card, so don't fire it at the first spell you see.</p>
+      <p class="alts"><strong>Lots of Yi players at your store?</strong> Run 1 Fiora, Peerless instead. She's a plain unit, and he brings in 2 for the mirror.</p>
+      <p class="alts"><strong>Left out:</strong> Back Off, Unyielding Spirit, Repulse. They're reactive tricks with timing windows, the same problem as Not So Fast with less upside. Ruin Runner and Sabotage can't go higher: the main deck already has 2 of each, so 3 is the cap.</p>
+    </div>
+  </div>
+</section>
+
+<section id="matchups">
+  <h2>Main matchups</h2>
+  <div class="mus">
+
+  <article class="mu" id="yi">
+    <header><h3>Master Yi mirror</h3><span class="tier even">First player favored</span><a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=2138s">35:38</a></header>
+    <div class="pick"><div class="swap">
+      <span class="lbl out">Out</span><div class="chips out"><span class="chip">2 Ruin Runner</span><span class="chip">1 Not So Fast</span></div>
+      <span class="lbl in">In</span><div class="chips in"><span class="chip">2 Fiora, Peerless</span><span class="chip">1 Sabotage</span><span class="chip">(post-ban: Sabotage + Alpha Strike)</span></div>
+    </div>
+    <span class="k">Mulligan</span><div class="chips mull"><span class="chip">Rengar</span><span class="chip">Punch First</span><span class="chip">Removal (Charm, Rampage)</span></div></div>
+    <div class="plan"><span class="k">Plan</span><ul>
+      <li>Remove every unit so their legend never triggers and they're playing a vanilla legend.</li>
+      <li><strong>Don't push early onto Grove.</strong> It hands them a free 8-might Rengar ambush. Develop the 2-drop and Yi, let them commit, then attack.</li>
+      <li>Charm + Rengar won his top-8 game going second.</li>
+    </ul>
+    <p class="alts"><strong>Local tech:</strong> Fiora, 2nd Alpha Strike, 3rd Sabotage, Vilemaw, Grim Resolve, Sterak's Gage (reusable +3, costs runes), Back Off (they'll read it as Zhonya's), Irelia.</p></div>
+  </article>
+
+  <article class="mu" id="kennen">
+    <header><h3>Kennen</h3><span class="tier">Be the aggressor</span><a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=2529s">42:09</a></header>
+    <div class="pick"><div class="swap">
+      <span class="lbl out">Out</span><div class="chips out"><span class="chip">1 Charm</span><span class="chip">1 En Garde</span><span class="chip">2 Zhonya's</span><span class="chip">1 flex</span></div>
+      <span class="lbl in">In</span><div class="chips in"><span class="chip">Ruin Runner</span><span class="chip">Not So Fast</span><span class="chip">Sabotage</span><span class="chip">2 Disarming Rake</span></div>
+    </div>
+    <span class="k">Mulligan</span><div class="chips mull"><span class="chip">Rampage</span><span class="chip">Not So Fast</span></div></div>
+    <div class="plan"><span class="k">Plan</span><ul>
+      <li><strong>Kill the rat</strong> (their chosen champion). Use Rampage, not Charm: their legend's +2 can turn a Charm against you.</li>
+      <li>Not So Fast their Switcheroo after they spend the legend: you win a 6-vs-4 fight with one card.</li>
+      <li>Take the trades. Kennen wins the late game with Last Rites, Rebukes and card draw.</li>
+      <li>Rakes kill Last Rites and the Seal: 2 Rakes, 3 if they run Edge of Night.</li>
+      <li>Zhonya's is weak: they flip it, then Rebuke.</li>
+    </ul>
+    <p class="alts"><strong>Alternatives:</strong> Alpha Strike, Twilight Shroud (blanks Switcheroo), Adaptatron (kills gear like the Seal on conquer), Disposal Order (graveyard hate, answers Fizz), Repulse, 2nd Onslaught.</p></div>
+  </article>
+
+  <article class="mu" id="jayce">
+    <header><h3>Jayce (Aurora)</h3><span class="tier hard">Hard++, the new best deck</span><a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=2816s">46:56</a></header>
+    <div class="pick"><div class="swap">
+      <span class="lbl out">Out</span><div class="chips out"><span class="chip">2 En Garde</span><span class="chip">2 Rampage</span><span class="chip">2 Punch First</span></div>
+      <span class="lbl in">In</span><div class="chips in"><span class="chip">Ruin Runner</span><span class="chip">Not So Fast</span><span class="chip">Sabotage</span><span class="chip">3 Disarming Rake</span></div>
+    </div>
+    <span class="k">Mulligan</span><div class="chips mull"><span class="chip">Charm</span><span class="chip">Not So Fast</span><span class="chip">Sabotage</span><span class="chip">Defy</span></div></div>
+    <div class="plan"><span class="k">Plan</span><ul>
+      <li>You need utility, not might: cut might and removal, bring in answers.</li>
+      <li>Two Aurora triggers end the game. Sabotage it from hand, Rake it on arrival, and Rake the Platewyrm Egg that powers out an early Aurora.</li>
+      <li><strong>On your Emperor's Dais game</strong> (going second), conquer with a Rake and use the Dais trigger to return it to hand, ready to kill the Aurora when it lands.</li>
+      <li>Before their 9-rune turn, <strong>group your units</strong> so one Elder Dragon can't clear the board.</li>
+      <li>Keep a Charm to send Elder back to base, then play Rengar for a quick conquer and a double conquer.</li>
+      <li>Once the Elder trigger's targets are locked, respond by playing Rengar onto that battlefield.</li>
+      <li>At 6 points, Not So Fast the Elder to win.</li>
+    </ul>
+    <p class="alts"><strong>Alternatives:</strong> 3rd Sabotage, Unyielding Spirit (no spell/ability damage this turn), Ambessa / Akali (dodge Elder), Steel Paws, Trinity Force (untested), Tomb-Raider Barbara (worse than Rake: can't kill a turn-2 Aurora), Esteemed Hierophant (niche).</p></div>
+  </article>
+
+  <article class="mu" id="leblanc">
+    <header><h3>LeBlanc</h3><span class="tier hard">Hard++</span><a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=3194s">53:14</a></header>
+    <div class="pick"><div class="swap">
+      <span class="lbl out">Out</span><div class="chips out"><span class="chip">2 Defy</span><span class="chip">1 flex</span><span class="chip">(going 2nd: 1 Defy + 1 Scuttle)</span></div>
+      <span class="lbl in">In</span><div class="chips in"><span class="chip">Ruin Runner</span><span class="chip">Not So Fast</span><span class="chip">1 Disarming Rake (2 if B.F. Sword)</span></div>
+    </div>
+    <span class="k">Mulligan</span><div class="chips mull"><span class="chip">Alpha Strike</span><span class="chip">Onslaught</span><span class="chip">Rampage</span></div></div>
+    <div class="plan"><span class="k">Plan</span><ul>
+      <li>Fight for both battlefields early (First Mate double conquer, hold the Grove). If LeBlanc can't conquer, her legend, Glasc Mixologist and Ruined Rex value all stall.</li>
+      <li><strong>Karthus must die.</strong> Expect it back via Mixologist.</li>
+      <li>Kill everything, including the birds whose deathknell gives them runes. They'll get that value eventually anyway.</li>
+      <li>Watcher → Punch First. Vi → Alpha Strike.</li>
+      <li>Win state: both at 6, and you have one big turn with Alpha Strike + Onslaught.</li>
+      <li>Defy only hits Hidden Blade and Deathgrip. Keep it if they run Smoke and Mirrors or Cull the Weak.</li>
+    </ul>
+    <p class="alts"><strong>Alternatives:</strong> 2nd Alpha Strike (<strong>must-have</strong>), Back Off (stuns Vi or the Watcher), 2nd Onslaught, Ambessa (attacks for 7, then defends for 9), Akali, Irelia, Vilemaw, Trinity Force.</p></div>
+  </article>
+
+  <article class="mu" id="irelia">
+    <header><h3>Irelia</h3><span class="tier">Easier, still hard</span><a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=3751s">1:02:31</a></header>
+    <div class="pick"><div class="swap">
+      <span class="lbl out">Out</span><div class="chips out"><span class="chip">2 Charm</span><span class="chip">2 Zhonya's</span><span class="chip">1 flex</span></div>
+      <span class="lbl in">In</span><div class="chips in"><span class="chip">Ruin Runner</span><span class="chip">Not So Fast</span><span class="chip">Sabotage</span><span class="chip">2 Disarming Rake</span><span class="chip">(or 2 Fiora for Ruin Runner + Not So Fast)</span></div>
+    </div>
+    <span class="k">Mulligan</span><div class="chips mull"><span class="chip">Punch First</span><span class="chip">Rengar</span><span class="chip">Rampage (for Stellacorn Herder)</span><span class="chip">Defy</span></div></div>
+    <div class="plan"><span class="k">Plan</span><ul>
+      <li>Your legend is a free En Garde every turn. Make them spend one more card than you in every fight and you outgrind them.</li>
+      <li>Count their accelerated might before pushing: Irelia accelerated with Guardian Angel hits 7, with Boots of Swiftness 8.</li>
+      <li>Before you Defy, <strong>ask whether they're using the Irelia legend</strong>, and let them finish their reactions first.</li>
+      <li>Charm is bad: it gives them a combat they can win with Rebuke or buffs. Zhonya's is fine vs midrange builds, bad vs Astral Heron.</li>
+      <li>Heron build: you'll have to fight the Heron eventually. Not So Fast their Rebuke, then Ruin Runner + Punch First, or Ruin Runner + Onslaught + Alpha Strike.</li>
+      <li>Protect-the-queen build: bring <strong>Fiora, Peerless</strong> instead of Ruin Runner and Not So Fast. This won his round 11.</li>
+    </ul>
+    <p class="alts"><strong>Alternatives:</strong> Back Off (catches them mid-buff war), Twilight Shroud, Tomb-Raider Barbara and Akshan (gear removal; Akshan steals the gear), Grim Resolve, Irelia, Crumbling Sands, Sterak's Gage.</p></div>
+  </article>
+
+  <article class="mu" id="rengar">
+    <header><h3>Rengar</h3><span class="tier even">Even, slight Yi edge</span><a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=4302s">1:11:42</a></header>
+    <div class="pick"><div class="swap">
+      <span class="lbl out">Out</span><div class="chips out"><span class="chip">2 Ruin Runner</span><span class="chip">Not So Fast</span></div>
+      <span class="lbl in">In</span><div class="chips in"><span class="chip">2 Decree of Focus</span><span class="chip">Sabotage</span></div>
+    </div>
+    <span class="k">Mulligan</span><div class="chips mull"><span class="chip">Punch First</span><span class="chip">Rengar</span><span class="chip">Charm</span><span class="chip">Alpha Strike</span></div></div>
+    <div class="plan"><span class="k">Plan</span><ul>
+      <li>Track their might from open runes: 2 = Inferna (+4), 3 = Punch First, 4 = accelerated 5-might, 5 = Rengar.</li>
+      <li>Cutting 1–2 Defy is still an option but less appealing now: they run 3 Rampage + 3 Thrill of the Hunt worth countering.</li>
+      <li>You have more card draw, so play for the late game. Rengar is much stronger attacking; keep units home when they hold a lot of might.</li>
+      <li>Don't tap out into an early Rampage. Losing units for free is how this matchup is lost.</li>
+      <li>Kill the Fae Porter: it brings a unit along for a 7-might Rengar slam, especially on Star Spring.</li>
+      <li>Watch for Thrill of the Hunt: units jumping battlefields, or a point stolen on your turn.</li>
+      <li><strong>Decree ruling:</strong> if they Thrill the Fury unit out after you cast Decree, the Decree fizzles. Defy the Thrill.</li>
+    </ul>
+    <p class="alts"><strong>Alternatives:</strong> Back Off, Alpha Strike, Irelia, Grim Resolve (better with Irelia), Vilemaw, Sterak's Gage (meh), Elder Dragon (meme).</p></div>
+  </article>
+
+  <article class="mu" id="azir">
+    <header><h3>Azir</h3><span class="tier hard">Tough</span><a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=4795s">1:19:55</a></header>
+    <div class="pick"><div class="swap">
+      <span class="lbl out">Out</span><div class="chips out"><span class="chip">Not So Fast</span><span class="chip">En Garde</span><span class="chip">2 Zhonya's</span><span class="chip">1 flex</span></div>
+      <span class="lbl in">In</span><div class="chips in"><span class="chip">3 Disarming Rake</span><span class="chip">Ruin Runner</span><span class="chip">Sabotage</span></div>
+    </div>
+    <span class="k">Mulligan</span><div class="chips mull"><span class="chip">Defy</span><span class="chip">Sabotage</span><span class="chip">Rampage / Charm</span><span class="chip">Rengar</span></div></div>
+    <div class="plan"><span class="k">Plan</span><ul>
+      <li>Aggro deck on a 4-6-8 curve. Beat it with one strong hold turn, then run them out of units.</li>
+      <li>Rengar's 6 attack / 8 defense is awkward for them. They need Sand Soldier + 2 B.F. Swords or Brutalizers to beat it.</li>
+      <li>Game 1 is hard with no equipment hate. Rakes plus the Dais loop take their +3s away.</li>
+      <li>Defy their hidden hold cards: Back Off, Hidden Blade, Guards! (+5).</li>
+      <li>Rampage, not Charm, on Azir's chosen champion: Charm him in and he brings all his units.</li>
+      <li>Watch for Vi: a 3-might attacker + Vi is 8 and kills Rengar for free.</li>
+    </ul>
+    <p class="alts"><strong>Alternatives:</strong> Akshan (steal a B.F. Sword, then defend for 9), Adaptatron, Tomb-Raider Barbara, Irelia, Back Off, Alpha Strike, Grim Resolve, Wind Wall vs Arise! (meme).</p></div>
+  </article>
+
+  </div>
+</section>
+
+<section id="rapid">
+  <h2>Rapid-fire matchups <a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=5410s">1:30:10</a></h2>
+  <div class="tbl"><table class="stack">
+    <thead><tr><th>Deck</th><th>Out</th><th>In</th><th>Key notes</th></tr></thead>
+    <tbody>
+      <tr><td>Akali <a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=5410s">1:30:10</a></td><td data-label="Out">Zhonya's, 2 flex (going first, make one flex a Charm rather than En Garde)</td><td data-label="In">Not So Fast, 1 Decree of Focus, Sabotage</td><td data-label="Key notes">Kill the Stellacorn Herder (draw engine) on sight. Not So Fast stops Falling Star and Blitzcrank. Your legend's +2 doesn't apply when she <em>moves in</em> (Void Gate damage), only when she moves out. Decree of Focus is normally dead against Heron (not a Fury unit), but it becomes live if they flip a Fury unit like Marai into that fight.</td></tr>
+      <tr><td>Diana <a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=5555s">1:32:35</a></td><td data-label="Out">Onslaught, Punch First, Charm</td><td data-label="In">Ruin Runner, Not So Fast, Sabotage</td><td data-label="Key notes">First 3 turns: develop in base only. Always keep Rampage. Charm is bad because it pulls in their best unit as an 8. Not So Fast can't counter a Moonfall that targets the battlefield, only one that pulls a unit. Watch for Kha'Zix and Switcheroo.</td></tr>
+      <tr><td>Draven <a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=5674s">1:34:34</a></td><td data-label="Out">3 Defy, flex (cut 1–3 Defy depending on build; if they run Star-Crossed or other Defy targets, keep those Defy and cut Zhonya's instead)</td><td data-label="In">2 Decree of Focus, Sabotage, Ruin Runner</td><td data-label="Key notes">Decree's +4 wrecks them, especially vs Spinning Axe. Sabotage forces an Axe on your turn, then Charm kills unit and Axe together. Don't give Scuttle away for free. Watch Cleave (+3) and accelerated <span data-card="Kha'Zix - Mutating Horror">Kha'Zix</span>, <span data-card="Darius - Trifarian">Darius</span> and Rek'Sai.</td></tr>
+      <tr><td>Ezreal <a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=5788s">1:36:28</a></td><td data-label="Out">Onslaught, Rampage, Charm, Alpha Strike, Punch First</td><td data-label="In">2 Disarming Rake, Ruin Runner, Not So Fast, Sabotage</td><td data-label="Key notes">They barely hold; <span data-card="Vex - Apathetic">Vex</span> is the most they hold with. Kill the Pack of Wonders gear fast. Prismat ran this same plan.</td></tr>
+      <tr><td>Kha'Zix <a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=5863s">1:37:43</a></td><td data-label="Out">2 Zhonya's, flex</td><td data-label="In">Ruin Runner, Not So Fast, Sabotage</td><td data-label="Key notes">Very tough. Their purple chosen champion becomes a 7-might defender. Lots of Star-Crossed and Rebuke make Zhonya's bad. Keep Rampage for Kha'Zix and Fae Porter, and watch that combo on Star Spring.</td></tr>
+      <tr><td>Rek'Sai <a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=5914s">1:38:34</a></td><td data-label="Out">2 Ruin Runner, flex</td><td data-label="In">2 Decree of Focus, Sabotage</td><td data-label="Key notes">Full red aggro. Sabotage takes Hidden Blade or Falling Star and reveals odd techs like Imperial Decree.</td></tr>
+      <tr><td>Ornn <a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=5940s">1:39:00</a></td><td data-label="Out">2 Ruin Runner, Charm, Zhonya's</td><td data-label="In">3 Disarming Rake, Sabotage</td><td data-label="Key notes">Their might comes from gear, so kill every Sterak's and Brutalizer. Their +3s beat your +2. Don't let them get an early hold, and don't attack into Brutalizers. The Ornn player claims he's favored.</td></tr>
+      <tr><td>Fiora (Rengar/Kayle hybrid)</td><td colspan="2">Like the Jayce plan, but keep more might</td><td data-label="Key notes">Beat him in Swiss. Possibly the hardest matchup.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="general">
+  <h2>Singapore run <a class="ts" href="https://www.youtube.com/watch?v=JtfcgYfdU4c&t=6060s">1:41:00</a></h2>
+  <div class="grid3">
+    <div class="panel"><h3>Day 1</h3><ul>
+      <li>Diana: close, won with Ruin Runner at the end. Play around Moonfall.</li>
+      <li>Zed: easy. Let the shadow clones conquer, then take the battlefield back. Keep Rampage for their chosen champion.</li>
+      <li>Fiora hybrid: lost.</li>
+      <li>Two LeBlancs (midrange and poke) both went late. Onslaught won them.</li>
+      <li>Draven: Decree of Focus is "broken".</li>
+    </ul></div>
+    <div class="panel"><h3>Day 2</h3><ul>
+      <li>Wuju/XB hold deck: lost game 1 by underestimating it, won 2–3 after respecting holds.</li>
+      <li>Round 11 vs Irelia: Fiora in game 3 against a protect-the-queen build.</li>
+      <li>Kennen: Rampage on early units starved their engine.</li>
+      <li>Jayce: he recommends the stream VOD as the template for playing around Aurora (Rengar on reactions, the Rake + Dais loop).</li>
+    </ul></div>
+    <div class="panel"><h3>Top cut</h3><ul>
+      <li>Top 8 Yi mirror (vs Vilemaw + Grim Resolve tech): won as the higher seed going first. A Charm + Rengar turn blew out their going-first game, and Rengar + Zhonya's vs Yi is "GG".</li>
+      <li>Semis: lost to a 25-might turn-2 opener.</li>
+      <li>He thinks Yi is no longer the strongest deck (Jayce is) but can still top 64.</li>
+    </ul></div>
+  </div>
+</section>
+
+<section id="lists">
+  <h2>LA top 8 comparison</h2>
+  <p class="lede" style="margin:0 0 14px">Ekpilot's Singapore list next to a post-ban Yi list that made top 8 at the LA qualifier. Shaded rows differ.</p>
+  <div class="grid2">
+    <div class="tbl"><table class="cmp">
+      <thead><tr><th>Main deck</th><th>Ekpilot<br>SG top 4</th><th>LA<br>top 8</th></tr></thead>
+      <tbody>
+        <tr class="grp"><td colspan="3">Units</td></tr>
+        <tr class="diff"><td>Lonely Poro</td><td class="n">3</td><td class="n">2</td></tr>
+        <tr><td>Pit Rookie</td><td class="n">3</td><td class="n">3</td></tr>
+        <tr><td>Scuttle Crab</td><td class="n">3</td><td class="n">3</td></tr>
+        <tr class="diff"><td>Legion Marauder</td><td class="n z">–</td><td class="n">1</td></tr>
+        <tr><td>First Mate</td><td class="n">3</td><td class="n">3</td></tr>
+        <tr><td>Rengar, Trophy Hunter</td><td class="n">3</td><td class="n">3</td></tr>
+        <tr class="diff"><td>Ruin Runner</td><td class="n">2</td><td class="n">1</td></tr>
+        <tr class="diff"><td>Akali, Silent</td><td class="n z">–</td><td class="n">1</td></tr>
+        <tr class="grp"><td colspan="3">Spells</td></tr>
+        <tr><td>En Garde</td><td class="n">2</td><td class="n">2</td></tr>
+        <tr><td>Punch First</td><td class="n">3</td><td class="n">3</td></tr>
+        <tr><td>Discipline</td><td class="n">3</td><td class="n">3</td></tr>
+        <tr><td>Onslaught</td><td class="n">1</td><td class="n">1</td></tr>
+        <tr><td>Charm</td><td class="n">3</td><td class="n">3</td></tr>
+        <tr><td>Rampage</td><td class="n">2</td><td class="n">2</td></tr>
+        <tr class="diff"><td>Alpha Strike</td><td class="n">1</td><td class="n z">–</td></tr>
+        <tr class="diff"><td>Sabotage</td><td class="n">1</td><td class="n">3</td></tr>
+        <tr><td>Defy</td><td class="n">3</td><td class="n">3</td></tr>
+        <tr class="diff"><td>Not So Fast</td><td class="n">1</td><td class="n z">–</td></tr>
+        <tr class="grp"><td colspan="3">Gear</td></tr>
+        <tr><td>Zhonya's Hourglass</td><td class="n">2</td><td class="n">2</td></tr>
+        <tr class="grp"><td colspan="3">+ Master Yi, Tempered (chosen champion) = 40</td></tr>
+      </tbody>
+    </table></div>
+    <div style="display:flex;flex-direction:column;gap:14px;min-width:0">
+      <div class="tbl"><table class="cmp side stack">
+        <thead><tr><th>Sideboard</th><th>Ekpilot SG</th><th>LA top 8</th></tr></thead>
+        <tbody>
+          <tr><td>Gear hate</td><td data-label="Ekpilot SG">3 Disarming Rake</td><td data-label="LA top 8">3 Disarming Rake</td></tr>
+          <tr><td>Decrees</td><td data-label="Ekpilot SG">2 Decree of Focus</td><td data-label="LA top 8">2 Decree of Strength, 1 Decree of Focus</td></tr>
+          <tr><td>Units</td><td data-label="Ekpilot SG">2 Fiora, 1 Ruin Runner</td><td data-label="LA top 8">1 Ruin Runner</td></tr>
+          <tr><td>Interaction</td><td data-label="Ekpilot SG">1 Sabotage, 1 Not So Fast</td><td data-label="LA top 8">1 Alpha Strike, 1 Repulse, 1 Unyielding Spirit</td></tr>
+          <tr><td>Battlefields</td><td data-label="Ekpilot SG">Star Spring, Grove, Dais</td><td data-label="LA top 8">Seat of Power, Star Spring, Dais</td></tr>
+          <tr><td>Runes</td><td data-label="Ekpilot SG">7 Body / 5 Calm</td><td data-label="LA top 8">7 Body / 5 Calm</td></tr>
+        </tbody>
+      </table></div>
+      <div class="panel"><h3>Followed Ekpilot's post-ban advice</h3><ul>
+        <li>More Sabotage, and further than he suggested: 3 in main.</li>
+        <li>Fiora gone. Decree of Strength added, at 2 copies instead of 1.</li>
+        <li>Akali promoted to main. Unyielding Spirit in the side.</li>
+        <li>Ruin Runner and 3 Rake kept as the sideboard core.</li>
+      </ul></div>
+      <div class="panel"><h3>Went against it</h3><ul>
+        <li><strong>Not So Fast cut entirely</strong>, main and side. Its main job was Kennen's Switcheroo, and Kennen got weaker. Repulse covers part of that role, and 3 main-deck Sabotage takes threats from hand instead.</li>
+        <li><strong>Grove dropped</strong> for the standard Seat of Power.</li>
+        <li><strong>No Back Off</strong>, his top pick for LA.</li>
+        <li><strong>Alpha Strike</strong> moved to side only. Zhonya's stayed at 2 rather than his suggested 1.</li>
+        <li>A Legion Marauder replaces a Lonely Poro, a card he called weaker in this meta.</li>
+      </ul></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>Decklist: <a href="https://piltoverarchive.com/decks/view/fd103adb-2571-484d-825f-4df92b7de4c6">Piltover Archive</a></footer>
+</div>
+
+<div id="tip" popover="hint" aria-hidden="true"><img alt=""></div>
+<dialog id="card" aria-label="Card preview" closedby="any">
+  <div class="sheet">
+    <div class="hd"><div><p class="nm" id="cardName"></p><div class="mt" id="cardMeta"></div></div><button class="x" type="button" commandfor="card" command="close">Close</button></div>
+    <div class="imgbox" id="cardBox"><img id="cardImg" alt=""></div>
+    <p class="hint" id="cardHint">Tap the card to zoom</p>
+    <p class="mt" id="cardFallback" hidden>The preview image can't load here. <a id="cardLink" href="#" target="_blank" rel="noopener">Open the card image</a></p>
+  </div>
+</dialog>
+<script>
+(function(){
+const D={"body": {"Master Yi, Wuju Bladesman": "Master Yi - Wuju Bladesman", "Master Yi, Tempered": "Master Yi - Tempered", "Master Yi, Wuju Master": "Master Yi - Wuju Master", "Lonely Poro": "Lonely Poro", "Pit Rookie": "Pit Rookie", "Scuttle Crab": "Scuttle Crab", "First Mate": "First Mate", "Rengar, Trophy Hunter": "Rengar, Trophy Hunter", "Rengar": "Rengar, Trophy Hunter", "Ruin Runner": "Ruin Runner", "En Garde": "En Garde", "Punch First": "Punch First", "Discipline": "Discipline", "Onslaught": "Onslaught", "Charm": "Charm", "Rampage": "Rampage", "Alpha Strike": "Alpha Strike", "Defy": "Defy", "Not So Fast": "Not So Fast", "Sabotage": "Sabotage", "Zhonya's Hourglass": "Zhonya's Hourglass", "Zhonya's": "Zhonya's Hourglass", "Disarming Rake": "Disarming Rake", "Rake": "Disarming Rake", "Rakes": "Disarming Rake", "Decree of Focus": "Decree of Focus", "Decree of Strength": "Decree of Strength", "Fiora, Peerless": "Fiora - Peerless", "Fiora": "Fiora - Peerless", "Back Off": "Back Off", "Ambessa": "Ambessa, The Wolf", "Unyielding Spirit": "Unyielding Spirit", "Akali, Silent": "Akali, Silent", "Star Spring": "Star Spring", "Grove of the God-Willow": "Grove of the God-Willow", "Grove": "Grove of the God-Willow", "Emperor's Dais": "Emperor's Dais", "Dais": "Emperor's Dais", "Seat of Power": "Seat of Power", "Steel Paws": "Steel Paws", "Irelia, Fervent": "Irelia, Fervent", "Vilemaw": "Vilemaw", "Grim Resolve": "Grim Resolve", "Astral Heron": "Astral Heron", "Heron": "Astral Heron", "Legion Marauder": "Legion Marauder", "Mournful Witness": "Mournful Witness", "Elder Dragon": "Elder Dragon", "Elder": "Elder Dragon", "Challenge": "Challenge", "Twilight Shroud": "Twilight Shroud", "Adaptatron": "Adaptatron", "Disposal Order": "Disposal Order", "Repulse": "Repulse", "Trinity Force": "Trinity Force", "Tomb-Raider Barbara": "Tomb-Raider Barbara", "Esteemed Hierophant": "Esteemed Hierophant", "Akshan": "Akshan - Mischievous", "Crumbling Sands": "Crumbling Sands", "Sterak's Gage": "Sterak's Gage", "Wind Wall": "Wind Wall", "Ruined Rex": "Ruined Rex", "Mirror Image": "Mirror Image", "Baited Hook": "Baited Hook", "Dazzling Aurora": "Dazzling Aurora", "Aurora": "Dazzling Aurora", "Switcheroo": "Switcheroo", "Singularity": "Singularity", "Star-Crossed": "Star-Crossed", "Rebuke": "Rebuke", "Bellows Breath": "Bellows Breath", "Flurry of Blades": "Flurry of Blades", "Last Rites": "Last Rites", "Edge of Night": "Edge of Night", "Fizz": "Fizz - Trickster", "Platewyrm Egg": "Platewyrm Egg", "Karthus": "Karthus - Eternal", "Glasc Mixologist": "Glasc Mixologist", "Thousand-Tailed Watcher": "Thousand-Tailed Watcher", "Watcher": "Thousand-Tailed Watcher", "Vi": "Vi - Peacekeeper", "Hidden Blade": "Hidden Blade", "Deathgrip": "Deathgrip", "Smoke and Mirrors": "Smoke and Mirrors", "Cull the Weak": "Cull the Weak", "Cull": "Cull", "B.F. Sword": "B.F. Sword", "B.F. Swords": "B.F. Sword", "Guardian Angel": "Guardian Angel", "Boots of Swiftness": "Boots of Swiftness", "Stellacorn Herder": "Stellacorn Herder", "Inferna": "Inferna", "Thrill of the Hunt": "Thrill of the Hunt", "Fae Porter": "Fae Porter", "Brutalizer": "Brutalizer", "Brutalizers": "Brutalizer", "Guards!": "Guards!", "Arise!": "Arise!", "Moonfall": "Moonfall", "Falling Star": "Falling Star", "Blitzcrank": "Blitzcrank - Impassive", "Acceptable Losses": "Acceptable Losses", "Spinning Axe": "Spinning Axe", "Cleave": "Cleave", "Imperial Decree": "Imperial Decree", "Pack of Wonders": "Pack of Wonders", "Zaun Warrens": "Zaun Warrens", "Targon's Peak": "Targon's Peak", "Abandoned Hall": "Abandoned Hall", "Treasure Hunter": "Treasure Hunter", "Smoke Screen": "Smoke Screen", "Void Gate": "Void Gate", "Sterak's": "Sterak's Gage", "Jayce": "Jayce - Defender of Tomorrow", "LeBlanc": "LeBlanc - Deceiver", "Irelia": "Irelia, Fervent", "Azir": "Azir - Emperor of the Sands", "Diana": "Diana - Scorn of the Moon", "Draven": "Draven - Glorious Executioner", "Ezreal": "Ezreal - Prodigal Explorer", "Ornn": "Ornn - Fire Below the Mountain", "Zed": "Zed - Master of Shadows", "Akali": "Akali, Silent", "Kennen": "Kennen - Heart of the Tempest", "Kai'Sa": "Kai'Sa - Daughter of the Void", "Jinx": "Jinx - Loose Cannon", "Vex": "Vex - Gloomist", "Annie": "Annie - Dark Child", "Kha'Zix": "Kha'Zix - Voidreaver", "LeBlancs": "LeBlanc - Deceiver", "Rek'Sai": "Rek'Sai - Breacher", "Kayle": "Kayle, Justified", "Marai": "Mischievous Marai", "Mixologist": "Glasc Mixologist", "Scuttle": "Scuttle Crab", "Poro": "Lonely Poro", "Decree": "Decree of Focus", "Thrill": "Thrill of the Hunt", "Axe": "Spinning Axe", "Bellows": "Bellows Breath", "Paws": "Steel Paws", "Spring": "Star Spring", "Rebukes": "Rebuke", "Seal": "Seal of Discord"}, "legend": {"Jayce": "Jayce - Defender of Tomorrow", "Kennen": "Kennen - Heart of the Tempest", "LeBlanc": "LeBlanc - Deceiver", "Irelia": "Irelia - Blade Dancer", "Azir": "Azir - Emperor of the Sands", "Diana": "Diana - Scorn of the Moon", "Draven": "Draven - Glorious Executioner", "Ezreal": "Ezreal - Prodigal Explorer", "Kha'Zix": "Kha'Zix - Voidreaver", "Ornn": "Ornn - Fire Below the Mountain", "Zed": "Zed - Master of Shadows", "Akali": "Akali - Rogue Assassin", "Rek'Sai": "Rek'sai - Void Burrower", "Rengar": "Rengar - Pridestalker", "Master Yi": "Master Yi - Wuju Bladesman"}, "cards": {"Abandoned Hall": {"img": "cards/7447b04d1e78.webp", "type": "Battlefield", "dom": ["Colorless"], "e": null, "m": null, "p": null}, "Acceptable Losses": {"img": "cards/b2b470bab1ae.webp", "type": "Spell", "dom": ["Chaos"], "e": 1, "m": null, "p": null}, "Adaptatron": {"img": "cards/a3ddb00a2a87.webp", "type": "Unit", "dom": ["Calm"], "e": 4, "m": 3, "p": null}, "Akali - Rogue Assassin": {"img": "cards/0d53b477ed43.webp", "type": "Legend", "dom": ["Fury", "Calm"], "e": null, "m": null, "p": null}, "Akali, Silent": {"img": "cards/f1a4d7385319.webp", "type": "Unit", "dom": ["Calm"], "e": 4, "m": 4, "p": 1}, "Akshan - Mischievous": {"img": "cards/f9e79f88463c.webp", "type": "Unit", "dom": ["Body"], "e": 4, "m": 4, "p": null}, "Alpha Strike": {"img": "cards/154940caa774.webp", "type": "Spell", "dom": ["Calm", "Body"], "e": 3, "m": null, "p": 1}, "Ambessa, The Wolf": {"img": "cards/df72c64b9773.webp", "type": "Unit", "dom": ["Body"], "e": 4, "m": 4, "p": null}, "Arise!": {"img": "cards/346f4698fea2.webp", "type": "Spell", "dom": ["Calm", "Order"], "e": 6, "m": null, "p": 1}, "Astral Heron": {"img": "cards/b1ce87efc9a1.webp", "type": "Unit", "dom": ["Calm"], "e": 7, "m": 7, "p": null}, "Azir - Emperor of the Sands": {"img": "cards/0472274c49f6.webp", "type": "Legend", "dom": ["Calm", "Order"], "e": null, "m": null, "p": null}, "B.F. Sword": {"img": "cards/97cd20e414c7.webp", "type": "Gear", "dom": ["Order"], "e": 4, "m": null, "p": null}, "Back Off": {"img": "cards/a0e7f7fa55ae.webp", "type": "Spell", "dom": ["Calm"], "e": 3, "m": null, "p": null}, "Baited Hook": {"img": "cards/7b4e6a1e3287.webp", "type": "Gear", "dom": ["Order"], "e": 3, "m": null, "p": null}, "Bellows Breath": {"img": "cards/f0ae1c4bb788.webp", "type": "Spell", "dom": ["Mind"], "e": 1, "m": null, "p": 1}, "Blitzcrank - Impassive": {"img": "cards/654dcc4aef0a.webp", "type": "Unit", "dom": ["Calm"], "e": 5, "m": 5, "p": 1}, "Boots of Swiftness": {"img": "cards/a8a8e977f742.webp", "type": "Gear", "dom": ["Chaos"], "e": 3, "m": null, "p": null}, "Brutalizer": {"img": "cards/3a0de7eec3de.webp", "type": "Gear", "dom": ["Calm"], "e": 2, "m": null, "p": null}, "Challenge": {"img": "cards/f5c1aeaee373.webp", "type": "Spell", "dom": ["Body"], "e": 2, "m": null, "p": 1}, "Charm": {"img": "cards/62ae564505db.webp", "type": "Spell", "dom": ["Calm"], "e": 1, "m": null, "p": 1}, "Cleave": {"img": "cards/95d476a1e88f.webp", "type": "Spell", "dom": ["Fury"], "e": 1, "m": null, "p": null}, "Crumbling Sands": {"img": "cards/0d7491bdb2e9.webp", "type": "Spell", "dom": ["Calm"], "e": 1, "m": null, "p": 1}, "Cull": {"img": "cards/885ee56a4153.webp", "type": "Gear", "dom": ["Chaos"], "e": 1, "m": null, "p": null}, "Cull the Weak": {"img": "cards/49338a4b3172.webp", "type": "Spell", "dom": ["Order"], "e": 2, "m": null, "p": 1}, "Dazzling Aurora": {"img": "cards/c023856a50c7.webp", "type": "Gear", "dom": ["Body"], "e": 9, "m": null, "p": 2}, "Deathgrip": {"img": "cards/695304200c6f.webp", "type": "Spell", "dom": ["Order"], "e": 2, "m": null, "p": null}, "Decree of Focus": {"img": "cards/3f9a1b209cfd.webp", "type": "Spell", "dom": ["Calm"], "e": 1, "m": null, "p": null}, "Decree of Strength": {"img": "cards/12106889f9f7.webp", "type": "Spell", "dom": ["Body"], "e": 1, "m": null, "p": null}, "Defy": {"img": "cards/4989bfcc4bd7.webp", "type": "Spell", "dom": ["Calm"], "e": 1, "m": null, "p": 1}, "Diana - Scorn of the Moon": {"img": "cards/b00d922d62da.webp", "type": "Legend", "dom": ["Mind", "Chaos"], "e": null, "m": null, "p": null}, "Disarming Rake": {"img": "cards/523732db17d8.webp", "type": "Unit", "dom": ["Calm"], "e": 3, "m": 2, "p": 1}, "Discipline": {"img": "cards/8b9613970b50.webp", "type": "Spell", "dom": ["Calm"], "e": 2, "m": null, "p": null}, "Disposal Order": {"img": "cards/de7b7c683f16.webp", "type": "Spell", "dom": ["Body"], "e": 2, "m": null, "p": null}, "Draven - Glorious Executioner": {"img": "cards/b01b2d0454ce.webp", "type": "Legend", "dom": ["Fury", "Chaos"], "e": null, "m": null, "p": null}, "Edge of Night": {"img": "cards/b3e385162bf3.webp", "type": "Gear", "dom": ["Chaos"], "e": 3, "m": null, "p": null}, "Elder Dragon": {"img": "cards/fcf578e447d4.webp", "type": "Unit", "dom": ["Body"], "e": 12, "m": 10, "p": 4}, "Emperor's Dais": {"img": "cards/c1ea4f6f58a6.webp", "type": "Battlefield", "dom": ["Colorless"], "e": null, "m": null, "p": null}, "En Garde": {"img": "cards/03c0ec7eaa59.webp", "type": "Spell", "dom": ["Calm"], "e": 1, "m": null, "p": null}, "Esteemed Hierophant": {"img": "cards/b47621d2b8ef.webp", "type": "Unit", "dom": ["Calm"], "e": 5, "m": 5, "p": null}, "Ezreal - Prodigal Explorer": {"img": "cards/d0e143d9edbc.webp", "type": "Legend", "dom": ["Mind", "Chaos"], "e": null, "m": null, "p": null}, "Fae Porter": {"img": "cards/4d233b11d4ef.webp", "type": "Unit", "dom": ["Chaos"], "e": 4, "m": 4, "p": null}, "Falling Star": {"img": "cards/9cf2d2e59e1b.webp", "type": "Spell", "dom": ["Fury"], "e": 2, "m": null, "p": 2}, "Fiora - Peerless": {"img": "cards/3fb80fed6fb9.webp", "type": "Unit", "dom": ["Body"], "e": 3, "m": 3, "p": 1}, "First Mate": {"img": "cards/85e2b436ea48.webp", "type": "Unit", "dom": ["Body"], "e": 3, "m": 3, "p": null}, "Fizz - Trickster": {"img": "cards/6d1c6615fb6e.webp", "type": "Unit", "dom": ["Chaos"], "e": 3, "m": 3, "p": 1}, "Flurry of Blades": {"img": "cards/c72f872e7e71.webp", "type": "Spell", "dom": ["Body"], "e": 1, "m": null, "p": null}, "Glasc Mixologist": {"img": "cards/e7422fee7179.webp", "type": "Unit", "dom": ["Order"], "e": 5, "m": 5, "p": 1}, "Grim Resolve": {"img": "cards/4705a4ef2589.webp", "type": "Spell", "dom": ["Body"], "e": 2, "m": null, "p": null}, "Grove of the God-Willow": {"img": "cards/1574863000ab.webp", "type": "Battlefield", "dom": ["Colorless"], "e": null, "m": null, "p": null}, "Guardian Angel": {"img": "cards/d09a79734565.webp", "type": "Gear", "dom": ["Calm"], "e": 2, "m": null, "p": null}, "Guards!": {"img": "cards/1dc4fef81d01.webp", "type": "Spell", "dom": ["Order"], "e": 3, "m": null, "p": null}, "Hidden Blade": {"img": "cards/0437ab8a0b67.webp", "type": "Spell", "dom": ["Order"], "e": 2, "m": null, "p": 1}, "Imperial Decree": {"img": "cards/fc6ab617f1ce.webp", "type": "Spell", "dom": ["Order"], "e": 5, "m": null, "p": 2}, "Inferna": {"img": "cards/5db9d66fc228.webp", "type": "Unit", "dom": ["Fury"], "e": 2, "m": 1, "p": null}, "Irelia - Blade Dancer": {"img": "cards/656ef2d1724b.webp", "type": "Legend", "dom": ["Calm", "Chaos"], "e": null, "m": null, "p": null}, "Irelia, Fervent": {"img": "cards/45d83debda44.webp", "type": "Unit", "dom": ["Calm"], "e": 5, "m": 4, "p": null}, "Kennen - Heart of the Tempest": {"img": "cards/0eab83392b31.webp", "type": "Legend", "dom": ["Order", "Chaos"], "e": null, "m": null, "p": null}, "Jayce - Defender of Tomorrow": {"img": "cards/670b7efd367a.webp", "type": "Legend", "dom": ["Mind", "Body"], "e": null, "m": null, "p": null}, "Karthus - Eternal": {"img": "cards/df3497ce6a60.webp", "type": "Unit", "dom": ["Order"], "e": 3, "m": 3, "p": 1}, "Kha'Zix - Voidreaver": {"img": "cards/a5db0b3340a1.webp", "type": "Legend", "dom": ["Body", "Chaos"], "e": null, "m": null, "p": null}, "Last Rites": {"img": "cards/6cfab85030bf.webp", "type": "Gear", "dom": ["Chaos"], "e": 3, "m": null, "p": null}, "LeBlanc - Deceiver": {"img": "cards/c17d29602d61.webp", "type": "Legend", "dom": ["Mind", "Order"], "e": null, "m": null, "p": null}, "Legion Marauder": {"img": "cards/15ec9e813e58.webp", "type": "Unit", "dom": ["Body"], "e": 2, "m": 2, "p": null}, "Lonely Poro": {"img": "cards/f5ab933035b7.webp", "type": "Unit", "dom": ["Calm"], "e": 2, "m": 2, "p": null}, "Master Yi - Tempered": {"img": "cards/a21feb355582.webp", "type": "Unit", "dom": ["Body"], "e": 4, "m": 4, "p": null}, "Master Yi - Wuju Bladesman": {"img": "cards/8231ced23eaf.webp", "type": "Legend", "dom": ["Calm", "Body"], "e": null, "m": null, "p": null}, "Master Yi - Wuju Master": {"img": "cards/ed9af5506659.webp", "type": "Legend", "dom": ["Calm", "Body"], "e": null, "m": null, "p": null}, "Mirror Image": {"img": "cards/a7ef8a09c029.webp", "type": "Spell", "dom": ["Mind", "Order"], "e": 3, "m": null, "p": 2}, "Moonfall": {"img": "cards/2eda8d4bbee4.webp", "type": "Spell", "dom": ["Mind", "Chaos"], "e": 3, "m": null, "p": 1}, "Mournful Witness": {"img": "cards/2f31651fc37a.webp", "type": "Unit", "dom": ["Calm"], "e": 2, "m": 2, "p": null}, "Not So Fast": {"img": "cards/e576fefdce72.webp", "type": "Spell", "dom": ["Calm"], "e": 2, "m": null, "p": 1}, "Onslaught": {"img": "cards/6a1ef90c64e0.webp", "type": "Spell", "dom": ["Body"], "e": 4, "m": null, "p": null}, "Ornn - Fire Below the Mountain": {"img": "cards/ed58d654034d.webp", "type": "Legend", "dom": ["Calm", "Mind"], "e": null, "m": null, "p": null}, "Pack of Wonders": {"img": "cards/a0830f326c49.webp", "type": "Gear", "dom": ["Chaos"], "e": 2, "m": null, "p": null}, "Pit Rookie": {"img": "cards/ec19eeaee85c.webp", "type": "Unit", "dom": ["Body"], "e": 2, "m": 2, "p": null}, "Platewyrm Egg": {"img": "cards/f6a3940440a3.webp", "type": "Gear", "dom": ["Body"], "e": 3, "m": null, "p": null}, "Punch First": {"img": "cards/d124efad90ff.webp", "type": "Spell", "dom": ["Body"], "e": 1, "m": null, "p": 2}, "Rampage": {"img": "cards/3c85ae2c6bd5.webp", "type": "Spell", "dom": ["Body"], "e": 3, "m": null, "p": null}, "Rebuke": {"img": "cards/c8e1ad72e9d5.webp", "type": "Spell", "dom": ["Chaos"], "e": 2, "m": null, "p": 2}, "Rek'sai - Void Burrower": {"img": "cards/2db78549c30d.webp", "type": "Legend", "dom": ["Fury", "Order"], "e": null, "m": null, "p": null}, "Rengar, Trophy Hunter": {"img": "cards/1f16f5b1f980.webp", "type": "Unit", "dom": ["Body"], "e": 5, "m": 6, "p": 1}, "Repulse": {"img": "cards/ca56ad44ec24.webp", "type": "Spell", "dom": ["Body"], "e": 1, "m": null, "p": 1}, "Ruin Runner": {"img": "cards/08abcf17d335.webp", "type": "Unit", "dom": ["Body"], "e": 6, "m": 5, "p": null}, "Ruined Rex": {"img": "cards/05fc9613bd3a.webp", "type": "Unit", "dom": ["Mind"], "e": 6, "m": 6, "p": 1}, "Sabotage": {"img": "cards/70f186b85fd2.webp", "type": "Spell", "dom": ["Body"], "e": 1, "m": null, "p": 1}, "Scuttle Crab": {"img": "cards/8c9a251b2deb.webp", "type": "Unit", "dom": ["Calm"], "e": 2, "m": 0, "p": null}, "Seat of Power": {"img": "cards/8b9db30f8eed.webp", "type": "Battlefield", "dom": ["Colorless"], "e": null, "m": null, "p": null}, "Singularity": {"img": "cards/792edce1a64d.webp", "type": "Spell", "dom": ["Mind"], "e": 6, "m": null, "p": 2}, "Smoke Screen": {"img": "cards/06c34457afd0.webp", "type": "Spell", "dom": ["Mind"], "e": 2, "m": null, "p": 1}, "Smoke and Mirrors": {"img": "cards/38886634ee86.webp", "type": "Spell", "dom": ["Mind"], "e": 2, "m": null, "p": null}, "Spinning Axe": {"img": "cards/e4e0328034e6.webp", "type": "Gear", "dom": ["Fury", "Chaos"], "e": 2, "m": null, "p": 1}, "Star Spring": {"img": "cards/0c4fe88ffb5c.webp", "type": "Battlefield", "dom": ["Colorless"], "e": null, "m": null, "p": null}, "Star-Crossed": {"img": "cards/0bfa45e6e86d.webp", "type": "Spell", "dom": ["Chaos"], "e": 3, "m": null, "p": 1}, "Steel Paws": {"img": "cards/79d9b6583ed8.webp", "type": "Unit", "dom": ["Calm"], "e": 1, "m": 0, "p": null}, "Stellacorn Herder": {"img": "cards/1e7960a35d45.webp", "type": "Unit", "dom": ["Calm"], "e": 4, "m": 3, "p": null}, "Sterak's Gage": {"img": "cards/df16e6b668fc.webp", "type": "Gear", "dom": ["Calm"], "e": 3, "m": null, "p": 2}, "Switcheroo": {"img": "cards/a4338f495fef.webp", "type": "Spell", "dom": ["Chaos"], "e": 2, "m": null, "p": 2}, "Targon's Peak": {"img": "cards/6ff1b34ad231.webp", "type": "Battlefield", "dom": ["Colorless"], "e": null, "m": null, "p": null}, "Thousand-Tailed Watcher": {"img": "cards/b20e5644c339.webp", "type": "Unit", "dom": ["Mind"], "e": 7, "m": 7, "p": 1}, "Thrill of the Hunt": {"img": "cards/2753c2b3ea4f.webp", "type": "Spell", "dom": ["Fury", "Body"], "e": 2, "m": null, "p": 1}, "Tomb-Raider Barbara": {"img": "cards/31d0c16ecaa0.webp", "type": "Unit", "dom": ["Calm"], "e": 4, "m": 4, "p": null}, "Treasure Hunter": {"img": "cards/c4e1bf257379.webp", "type": "Unit", "dom": ["Chaos"], "e": 2, "m": 1, "p": null}, "Trinity Force": {"img": "cards/e8b64985389e.webp", "type": "Gear", "dom": ["Body"], "e": 4, "m": null, "p": null}, "Twilight Shroud": {"img": "cards/0bd93298503d.webp", "type": "Spell", "dom": ["Calm"], "e": 1, "m": null, "p": null}, "Unyielding Spirit": {"img": "cards/9afea96ec04c.webp", "type": "Spell", "dom": ["Body"], "e": 1, "m": null, "p": 1}, "Vi - Peacekeeper": {"img": "cards/51610bbdecd7.webp", "type": "Unit", "dom": ["Order"], "e": 5, "m": 5, "p": 1}, "Vilemaw": {"img": "cards/cb6dde0284f9.webp", "type": "Unit", "dom": ["Calm"], "e": 8, "m": 8, "p": 2}, "Void Gate": {"img": "cards/14a52a367fd4.webp", "type": "Battlefield", "dom": ["Colorless"], "e": null, "m": null, "p": null}, "Wind Wall": {"img": "cards/72c4dbe48d06.webp", "type": "Spell", "dom": ["Calm"], "e": 3, "m": null, "p": 2}, "Zaun Warrens": {"img": "cards/458ee40086c7.webp", "type": "Battlefield", "dom": ["Colorless"], "e": null, "m": null, "p": null}, "Zed - Master of Shadows": {"img": "cards/aa316eb1b01c.webp", "type": "Legend", "dom": ["Fury", "Chaos"], "e": null, "m": null, "p": null}, "Zhonya's Hourglass": {"img": "cards/dc38172c56f8.webp", "type": "Gear", "dom": ["Calm"], "e": 2, "m": null, "p": null}, "Kai'Sa - Daughter of the Void": {"img": "cards/a576472c7bb0.webp", "type": "Legend", "dom": ["Fury", "Mind"], "e": null, "m": null, "p": null}, "Jinx - Loose Cannon": {"img": "cards/f57c14381b12.webp", "type": "Legend", "dom": ["Fury", "Chaos"], "e": null, "m": null, "p": null}, "Vex - Gloomist": {"img": "cards/653e9b8fc498.webp", "type": "Legend", "dom": ["Calm", "Chaos"], "e": null, "m": null, "p": null}, "Annie - Dark Child": {"img": "cards/89963e1d1cff.webp", "type": "Legend", "dom": ["Fury", "Chaos"], "e": null, "m": null, "p": null}, "Rek'Sai - Breacher": {"img": "cards/999e2d25ea32.webp", "type": "Unit", "dom": ["Fury"], "e": 3, "m": 3, "p": null}, "Kayle, Justified": {"img": "cards/0fec986bfca8.webp", "type": "Unit", "dom": ["Order"], "e": 3, "m": 3, "p": null}, "Mischievous Marai": {"img": "cards/fb2e82cca7aa.webp", "type": "Unit", "dom": ["Fury"], "e": 2, "m": 2, "p": null}, "Rengar - Pridestalker": {"img": "cards/b3d3085f62ae.webp", "type": "Legend", "dom": ["Fury", "Body"], "e": null, "m": null, "p": null}, "Kha'Zix - Mutating Horror": {"img": "cards/8306abc5ffce.webp", "type": "Unit", "dom": ["Chaos"], "e": 4, "m": 4, "p": 1}, "Darius - Trifarian": {"img": "cards/bf7a4900fd22.webp", "type": "Unit", "dom": ["Fury"], "e": 5, "m": 5, "p": 1}, "Vex - Apathetic": {"img": "cards/7f13b0216c5d.webp", "type": "Unit", "dom": ["Chaos"], "e": 4, "m": 4, "p": null}, "Seal of Discord": {"img": "cards/dd8433e77e46.webp", "type": "Gear", "dom": ["Chaos"], "e": 0, "m": null, "p": 1}}};
+const HOVER=matchMedia('(hover:hover) and (pointer:fine)').matches;
+const SKIP='a,button,script,style,nav,.ts,.tier,.lbl,th,h1,h2,dialog,#tip';
+function esc(s){return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');}
+function rx(map){const ks=Object.keys(map).sort((a,b)=>b.length-a.length).map(esc);
+  return new RegExp("(^|[^\\w'’.-])("+ks.join('|')+")(?=['’]s(?![\\w'’])|(?![\\w'’]))","g");}
+const RB=rx(D.body), RL=rx(Object.assign({},D.body,D.legend));
+function legendCtx(el){return !!el.closest('.mu header h3, table.stack td:first-child');}
+function cardBtn(text,card){
+  const b=document.createElement('button');b.type='button';b.className='cl';b.textContent=text;b.dataset.card=card;
+  b.setAttribute('commandfor','card');b.setAttribute('command','show-modal');if(HOVER)b.setAttribute('interestfor','tip');return b;}
+function link(root){
+  // per-occurrence override for names the maps would resolve wrongly in context: <span data-card="Exact - Card">Name</span>
+  for(const s of root.querySelectorAll('span[data-card]'))s.replaceWith(cardBtn(s.textContent,s.dataset.card));
+  const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode(n){
+    if(!n.nodeValue.trim())return NodeFilter.FILTER_REJECT;
+    if(n.parentElement.closest(SKIP))return NodeFilter.FILTER_REJECT;
+    return NodeFilter.FILTER_ACCEPT;}});
+  const nodes=[];while(walker.nextNode())nodes.push(walker.currentNode);
+  for(const n of nodes){
+    const leg=legendCtx(n.parentElement), R=leg?RL:RB, map=leg?Object.assign({},D.body,D.legend):D.body;
+    const t=n.nodeValue;R.lastIndex=0;let m,last=0;const frag=document.createDocumentFragment();let hit=false;
+    while((m=R.exec(t))){hit=true;const start=m.index+m[1].length;
+      // likewise an opening bracket or quote directly before the name
+      const pre=/[(“"]$/.exec(t.slice(last,start));
+      frag.append(t.slice(last,start-(pre?1:0)));
+      const b=cardBtn(m[2],map[m[2]]);
+      last=start+m[2].length;
+      // a button is an atomic inline box, so glue trailing punctuation to it or "Aurora" / "." can wrap apart
+      let p=/^(?:['’]s)?[.,:;!?)”"]*/.exec(t.slice(last));if(p&&!p[0])p=null;
+      if(p||pre){const w=document.createElement('span');w.className='nw';if(pre)w.append(pre[0]);w.append(b);if(p){w.append(p[0]);last+=p[0].length;}frag.append(w);}
+      else frag.append(b);}
+    if(hit){frag.append(t.slice(last));n.replaceWith(frag);}
+  }
+}
+link(document.querySelector('main'));
+const dlg=document.getElementById('card'),sheet=dlg.querySelector('.sheet'),box=document.getElementById('cardBox'),img=document.getElementById('cardImg'),
+  nm=document.getElementById('cardName'),mt=document.getElementById('cardMeta'),hint=document.getElementById('cardHint'),
+  fb=document.getElementById('cardFallback'),lk=document.getElementById('cardLink');
+function info(name){const c=D.cards[name];if(!c)return '';
+  const p=[(c.dom&&c.dom.length?c.dom.join(' / ')+' ':'')+c.type.toLowerCase()];
+  if(c.e!=null)p.push(c.e+' energy');if(c.m!=null)p.push(c.m+' might');const t=p.join(', ');return t[0].toUpperCase()+t.slice(1);}
+// Card names are <button command="show-modal" commandfor="card">: the browser opens the dialog, we only fill it first.
+dlg.addEventListener('command',e=>{
+  if(e.command!=='show-modal')return;
+  const name=e.source?.dataset.card,c=D.cards[name];opener=e.source;
+  if(!c){e.preventDefault();return;}
+  const land=c.type==='Battlefield';
+  nm.textContent=name.replace(' - ',', ');mt.textContent=info(name);
+  sheet.classList.remove('zoom');hint.textContent='Tap the card to zoom';hint.hidden=false;fb.hidden=true;
+  img.className=land?'land':'';dlg.classList.toggle('land',land);
+  img.hidden=false;img.style.visibility='hidden';img.alt=name+' card';lk.href=c.img;img.src=c.img;
+  box.scrollTo(0,0);
+});
+img.addEventListener('load',()=>{img.style.visibility='';});
+img.addEventListener('error',()=>{if(!img.getAttribute('src'))return;img.hidden=true;fb.hidden=false;hint.hidden=true;});
+img.addEventListener('click',()=>{hint.textContent=sheet.classList.toggle('zoom')?'Tap the card to fit the screen':'Tap the card to zoom';});
+// Closing returns focus to the opener, and interestfor treats that focus as interest: keep its preview quiet
+// until the opener is hovered afresh or loses focus.
+// If the pointer is still over it, Chrome also sends a synthetic pointerenter once the dialog is gone, so then wait for a real leave.
+let opener=null,quiet=null,px=-1,py=-1;
+addEventListener('pointermove',e=>{px=e.clientX;py=e.clientY;},{passive:true});
+function unquiet(){quiet=null;}
+dlg.addEventListener('close',()=>{img.removeAttribute('src');quiet=opener;
+  if(quiet){const over=quiet.contains(document.elementFromPoint(px,py));
+    for(const t of [over?'pointerleave':'pointerenter','blur'])quiet.addEventListener(t,unquiet,{once:true});}
+  if(tip.matches(':popover-open'))tip.hidePopover();});
+// Hover/focus preview: interestfor opens the hint popover and anchors it to the button; we only swap the image.
+const tip=document.getElementById('tip'),tipImg=tip.querySelector('img');
+tip.addEventListener('interest',e=>{const c=D.cards[e.source?.dataset.card];if(!c||e.source===quiet){e.preventDefault();return;}
+  tip.classList.toggle('land',c.type==='Battlefield');
+  if(tipImg.src!==c.img){tip.classList.remove('ready');tipImg.src=c.img;}});
+tipImg.addEventListener('load',()=>tip.classList.add('ready'));
+tipImg.addEventListener('error',()=>tip.hidePopover());
+// The active tab itself is pure CSS (:target-current). Once per finished scroll, mirror it to aria-current
+// and keep it visible when the tab strip overflows horizontally.
+const nav=document.querySelector('nav.jump');let cur=null;
+function syncNav(){
+  const a=nav.querySelector('a:target-current');if(a===cur)return;
+  cur?.removeAttribute('aria-current');cur=a;if(!a)return;
+  a.setAttribute('aria-current','location');
+  if(nav.scrollWidth>nav.clientWidth)a.scrollIntoView({block:'nearest',inline:'nearest',container:'nearest',
+    behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'instant':'smooth'});
+}
+addEventListener('scrollend',syncNav);
+requestAnimationFrame(()=>requestAnimationFrame(syncNav)); // deep links / restored scroll fire no scrollend
+})();
+</script>
+</body>
+</html>
