@@ -132,8 +132,12 @@ table.sk{min-width:0}
 #tip.land{width:min(580px,52vw,calc((100dvh - 24px) * 1.397));aspect-ratio:1039/744}
 #tip img{width:100%;height:100%;display:block;opacity:0}
 #tip.ready img{opacity:1}
-dialog#card{border:0;padding:0;background:transparent;max-width:min(94vw,744px,calc((100dvh - 110px) * 0.716 + 26px));max-height:100dvh;width:100%;color:var(--fg)}
+dialog#card{border:0;padding:0;background:transparent;max-width:min(100vw - 24px,744px,calc((100dvh - 110px) * 0.716 + 26px));max-height:100dvh;width:100%;color:var(--fg)}
 dialog#card::backdrop{background:rgb(10 14 12/.72)}
+/* a modal dialog makes the page inert but doesn't stop it scrolling: lock it while the card is open */
+html{scrollbar-gutter:stable} /* no layout shift when the lock removes the scrollbar */
+html:has(dialog#card:modal){overflow:hidden}
+dialog#card{overscroll-behavior:contain}
 /* Open/close transition: answers the click, so it's the one place the page animates */
 @media (prefers-reduced-motion:no-preference){
   dialog#card,dialog#card::backdrop{transition:opacity .18s,translate .18s,overlay .18s allow-discrete,display .18s allow-discrete}
@@ -144,7 +148,7 @@ dialog#card::backdrop{background:rgb(10 14 12/.72)}
 .sheet{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:10px}
 .sheet img{width:100%;height:auto;border-radius:10px;display:block;background:var(--sunk);aspect-ratio:744/1039}
 .sheet img.land{aspect-ratio:1039/744}
-dialog#card.land{max-width:min(94vw,1039px,calc((100dvh - 110px) * 1.397 + 26px))}
+dialog#card.land{max-width:min(100vw - 24px,1039px,calc((100dvh - 110px) * 1.397 + 26px))}
 .sheet.zoom .imgbox img.land{width:1039px}
 .sheet .imgbox{overflow:auto;border-radius:10px;max-height:calc(100dvh - 110px)}
 .sheet .imgbox img{cursor:zoom-in}
@@ -155,9 +159,7 @@ dialog#card.land{max-width:min(94vw,1039px,calc((100dvh - 110px) * 1.397 + 26px)
 .sheet .mt{font-size:.82rem;color:var(--muted)}
 .sheet .x{font:600 .9rem var(--display);background:var(--sunk);color:var(--fg);border:0;border-radius:8px;min-height:40px;padding:0 14px;cursor:pointer}
 @media (max-width:640px){
-  dialog#card{max-width:100vw;margin:auto 0 0;width:100vw}
-  dialog#card .sheet{border-radius:16px 16px 0 0;padding:10px 8px calc(12px + env(safe-area-inset-bottom,0px));max-height:96dvh}
-  dialog#card .sheet .imgbox{max-height:calc(96dvh - 90px)}
+  dialog#card .sheet{padding:10px 8px}
   dialog#card .sheet .hd{padding:0 4px}
 }
 /* phone layout */
