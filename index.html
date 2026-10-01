@@ -4,6 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#f3f5f2" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121815" media="(prefers-color-scheme: dark)">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
 <title>Ekpilot's Master Yi Notes</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -692,6 +697,8 @@ img.addEventListener('load',()=>{img.style.visibility='';});
 img.addEventListener('error',()=>{if(!img.getAttribute('src'))return;img.hidden=true;fb.hidden=false;});
 // Any click inside the open dialog (card, header or backdrop) closes it.
 dlg.addEventListener('click',()=>dlg.close());
+// Start loading a card when a finger or mouse presses its name: that's 50-100 ms before the click opens the dialog.
+document.querySelector('main').addEventListener('pointerdown',e=>{const c=D.cards[e.target.closest?.('.cl')?.dataset.card];if(c)new Image().src=c.img;},{passive:true});
 // Closing returns focus to the opener, and interestfor treats that focus as interest: keep its preview quiet
 // until the opener is hovered afresh or loses focus.
 // If the pointer is still over it, Chrome also sends a synthetic pointerenter once the dialog is gone, so then wait for a real leave.
@@ -723,6 +730,11 @@ nav.addEventListener('click',e=>{const d=document.querySelector(e.target.closest
 addEventListener('scrollend',syncNav);
 requestAnimationFrame(()=>requestAnimationFrame(syncNav)); // deep links / restored scroll fire no scrollend
 })();
+</script>
+<script>
+// Offline copy: the service worker keeps the page and, unless Data Saver is on, downloads every card once.
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').then(()=>navigator.serviceWorker.ready)
+  .then(reg=>{if(!navigator.connection?.saveData)reg.active?.postMessage('precache-cards');}).catch(()=>{});
 </script>
 </body>
 </html>
