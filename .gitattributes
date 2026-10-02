@@ -1,3 +1,4 @@
 .gitattributes export-ignore
 build.py export-ignore
 deploy.sh export-ignore
+.gitignore export-ignore
