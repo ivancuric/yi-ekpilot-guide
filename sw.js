@@ -32,7 +32,7 @@ self.addEventListener('fetch',e=>{
   const r=e.request; if(r.method!=='GET') return;
   const u=new URL(r.url);
   if(u.origin===location.origin){
-    if(r.mode==='navigate') e.respondWith(staleWhileRevalidate(SHELL,new Request(self.registration.scope),e));
+    if(r.mode==='navigate') e.respondWith(networkFirst(SHELL,new Request(self.registration.scope),e));
     else if(u.pathname.includes('/cards/')) e.respondWith(cacheFirst(CARDS,r));
     else e.respondWith(staleWhileRevalidate(SHELL,r,e));
   } else if(u.hostname==='fonts.googleapis.com'||u.hostname==='fonts.gstatic.com'){
@@ -46,6 +46,16 @@ async function cacheFirst(name,req){
   const res=await fetch(req);
   if(res.ok) c.put(req,res.clone());
   return res;
+}
+
+// The page itself: ask the network first, revalidating past the HTTP cache (GitHub Pages sends
+// max-age=600), so a deploy shows on the next load. Offline, or after 3 s, serve the saved copy.
+function networkFirst(name,req,e){
+  const net=fetch(req,{cache:'no-cache'});
+  // Clone before anything awaits: once the page starts reading the body, clone() throws.
+  e.waitUntil(net.then(res=>{if(!res.ok) return; const copy=res.clone(); return caches.open(name).then(c=>c.put(req,copy));}).catch(()=>{}));
+  const slow=new Promise((_,fail)=>setTimeout(fail,3000));
+  return Promise.race([net,slow]).catch(async()=>(await caches.match(req,{cacheName:name}))||net);
 }
 
 // Serve the saved copy at once and refresh it in the background; the update shows on the next visit.
